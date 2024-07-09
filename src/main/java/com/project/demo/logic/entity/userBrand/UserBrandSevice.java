@@ -13,7 +13,7 @@ public class UserBrandSevice {
 
 
     public Long createUserBrand(UserBrand userBrand) {
-        if (repository.findByBrandName(userBrand.getBrandName()) != null && !repository.findByBrandName(userBrand.getBrandName()).isEmpty()) {
+        if (!repository.findByBrandName(userBrand.getBrandName()).isEmpty()) {
             throw new RuntimeException("User Brand with name " + userBrand.getBrandName() + " already exists");
         }
         repository.save(userBrand);

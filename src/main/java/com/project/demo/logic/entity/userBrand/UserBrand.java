@@ -31,8 +31,9 @@ public class UserBrand implements UserDetails {
     @Column(name = "main_location_address", nullable = false)
     private String mainLocationAddress;
 
-//    @Column(name = "legal_documents")
-//    private String legalDocuments;
+    @Lob
+    @Column(name = "legal_documents")
+    private byte[] legalDocuments;
 
     @Column(name = "brand_categories")
     private String brandCategories;
@@ -133,13 +134,13 @@ public class UserBrand implements UserDetails {
         this.mainLocationAddress = mainLocationAddress;
     }
 
-//    public String getLegalDocuments() {
-//        return legalDocuments;
-//    }
-//
-//    public void setLegalDocuments(String legalDocuments) {
-//        this.legalDocuments = legalDocuments;
-//    }
+    public byte[] getLegalDocuments() {
+        return legalDocuments;
+    }
+
+    public void setLegalDocuments(byte[] legalDocuments) {
+        this.legalDocuments = legalDocuments;
+    }
 
     public String getBrandCategories() {
         return brandCategories;
