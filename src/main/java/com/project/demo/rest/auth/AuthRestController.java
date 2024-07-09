@@ -8,6 +8,8 @@ import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
+import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBrand.UserBrandSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +33,9 @@ public class AuthRestController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserBrandSevice userBrandSevice;
 
 
 
@@ -70,6 +75,20 @@ public class AuthRestController {
         user.setRole(optionalRole.get());
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(savedUser);
+    }
+
+    @PostMapping("/signup/brand")
+    public ResponseEntity<?> registerUserBrand(@RequestBody UserBrand userBrand) {
+        userBrand.setPassword(passwordEncoder.encode(userBrand.getPassword()));
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
+
+        if (optionalRole.isEmpty()) {
+            return   null;
+        }
+
+        userBrand.setRole(optionalRole.get());
+        Long savedUserBrand = userBrandSevice.createUserBrand(userBrand);
+        return ResponseEntity.ok(savedUserBrand);
     }
 
 }
