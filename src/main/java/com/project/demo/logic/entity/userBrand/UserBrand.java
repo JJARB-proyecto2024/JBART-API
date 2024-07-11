@@ -19,10 +19,10 @@ public class UserBrand implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "legal_id", nullable = false, unique = true)
-    private String legalId;
+    @Column(name = "legal_id", nullable = false, unique = true, length = 9)
+    private Long legalId;
 
-    @Column(name = "logo_type")
+    @Column(name = "logo_type", nullable = false)
     private String logoType;
 
     @Column(name = "brand_name", nullable = false, unique = true)
@@ -38,7 +38,7 @@ public class UserBrand implements UserDetails {
     @Column(name = "legal_documents")
     private byte[] legalDocuments;
 
-    @Column(name = "brand_categories")
+    @Column(name = "brand_categories", nullable = false)
     private String brandCategories;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -105,11 +105,11 @@ public class UserBrand implements UserDetails {
         this.id = id;
     }
 
-    public String getLegalId() {
+    public Long getLegalId() {
         return legalId;
     }
 
-    public void setLegalId(String legalId) {
+    public void setLegalId(Long legalId) {
         this.legalId = legalId;
     }
 
