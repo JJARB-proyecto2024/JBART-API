@@ -9,7 +9,7 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandSevice;
+import com.project.demo.logic.entity.userBrand.UserBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,7 @@ public class AuthRestController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private UserBrandSevice userBrandSevice;
+    private UserBrandService userBrandSevice;
 
 
 
