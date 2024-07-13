@@ -1,4 +1,4 @@
-package com.project.demo.rest.userBarnd;
+package com.project.demo.rest.userBrand;
 
 
 import com.project.demo.logic.entity.userBrand.UserBrandService;
