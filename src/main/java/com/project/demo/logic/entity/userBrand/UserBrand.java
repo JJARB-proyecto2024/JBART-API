@@ -32,7 +32,7 @@ public class UserBrand extends User {
 
     @Lob
     @Column(name = "legal_documents")
-    private byte[] legalDocuments;
+    private String legalDocuments;
 
     @Column(name = "brand_categories", nullable = false)
     private String brandCategories;
@@ -123,11 +123,11 @@ public class UserBrand extends User {
         this.mainLocationAddress = mainLocationAddress;
     }
 
-    public byte[] getLegalDocuments() {
+    public String getLegalDocuments() {
         return legalDocuments;
     }
 
-    public void setLegalDocuments(byte[] legalDocuments) {
+    public void setLegalDocuments(String legalDocuments) {
         this.legalDocuments = legalDocuments;
     }
 
