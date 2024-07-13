@@ -1,20 +1,16 @@
 package com.project.demo.logic.entity.userBrand;
 
-import com.project.demo.logic.entity.rol.Role;
+import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+
 
 @Entity
-@Table(name = "brand_user")
-public class UserBrand implements UserDetails {
+@Table(name = "user_brand")
+public class UserBrand extends User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,12 +37,6 @@ public class UserBrand implements UserDetails {
     @Column(name = "brand_categories", nullable = false)
     private String brandCategories;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -55,27 +45,10 @@ public class UserBrand implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
-    private Role role;
-
     public UserBrand() {}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
-        return List.of(authority);
-    }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
+    // Métodos heredados de User, no es necesario redefinir getEmail() y getPassword()
 
     @Override
     public boolean isAccountNonExpired() {
@@ -95,6 +68,11 @@ public class UserBrand implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail(); // Utiliza el método getEmail() heredado
     }
 
     public Long getId() {
@@ -161,16 +139,14 @@ public class UserBrand implements UserDetails {
         this.brandCategories = brandCategories;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
+    @Override
     public void setEmail(String email) {
-        this.email = email;
+        super.setEmail(email); // Llama al método setEmail() de la clase User
     }
 
+    @Override
     public void setPassword(String password) {
-        this.password = password;
+        super.setPassword(password); // Llama al método setPassword() de la clase User
     }
 
     public Date getCreatedAt() {
@@ -189,12 +165,4 @@ public class UserBrand implements UserDetails {
         this.updatedAt = updatedAt;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public UserBrand setRole(Role role) {
-        this.role = role;
-        return this;
-    }
 }

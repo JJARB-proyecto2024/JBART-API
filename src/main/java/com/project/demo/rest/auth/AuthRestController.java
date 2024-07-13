@@ -9,7 +9,7 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandService;
+import com.project.demo.rest.userBrand.UserBrandRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,7 @@ public class AuthRestController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private UserBrandService userBrandSevice;
+    private UserBrandRestController userBrandSevice;
 
 
 
@@ -83,12 +83,10 @@ public class AuthRestController {
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
 
         if (optionalRole.isEmpty()) {
-            return   null;
+            return null;
         }
-
         userBrand.setRole(optionalRole.get());
-        Long savedUserBrand = userBrandSevice.createUserBrand(userBrand);
-        return ResponseEntity.ok(savedUserBrand);
+        UserBrand savedUser = userRepository.save(userBrand);
+        return ResponseEntity.ok(savedUser);
     }
-
 }
