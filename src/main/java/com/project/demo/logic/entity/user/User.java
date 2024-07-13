@@ -1,7 +1,9 @@
 package com.project.demo.logic.entity.user;
 
+import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.rol.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Array;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,11 +22,17 @@ public class User implements UserDetails {
     private Long id;
     private String name;
     private String lastname;
+    private String picture;
+    private String genre;
+    private String deliveryLocation;
+    private String phoneNumber;
+
     @Column(unique = true, length = 100, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
+
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -44,8 +52,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
+    private boolean active;
+
     // Constructors
-    public User() {}
+    public User() {
+    }
 
 
     @Override
@@ -97,6 +108,38 @@ public class User implements UserDetails {
         this.lastname = lastname;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getDeliveryLocation() {
+        return deliveryLocation;
+    }
+
+    public void setDeliveryLocation(String deliveryLocation) {
+        this.deliveryLocation = deliveryLocation;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -138,5 +181,13 @@ public class User implements UserDetails {
         this.role = role;
 
         return this;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

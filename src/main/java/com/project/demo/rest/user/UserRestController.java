@@ -48,7 +48,13 @@ public class UserRestController {
                 .map(existingUser -> {
                     existingUser.setName(user.getName());
                     existingUser.setLastname(user.getLastname());
+                    existingUser.setPicture(user.getPicture());
+                    existingUser.setGenre(user.getGenre());
+                    existingUser.setDeliveryLocation(user.getDeliveryLocation());
+                    existingUser.setPhoneNumber(user.getPhoneNumber());
                     existingUser.setEmail(user.getEmail());
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                    existingUser.setActive(user.isActive());
                     return UserRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
