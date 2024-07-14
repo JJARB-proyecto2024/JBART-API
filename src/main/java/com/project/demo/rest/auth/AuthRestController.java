@@ -9,6 +9,7 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.rest.userBrand.UserBrandRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,22 @@ public class AuthRestController {
             return null;
         }
         userBrand.setRole(optionalRole.get());
+        userBrand.setStatus("Inactivo");
         UserBrand savedUser = userRepository.save(userBrand);
+        return ResponseEntity.ok(savedUser);
+    }
+
+    @PostMapping("/signup/buyer")
+    public ResponseEntity<?> registerUserBuyer(@RequestBody UserBuyer userBuyer) {
+        userBuyer.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
+
+        if (optionalRole.isEmpty()) {
+            return null;
+        }
+        userBuyer.setRole(optionalRole.get());
+        userBuyer.setStatus("Activo");
+        UserBuyer savedUser = userRepository.save(userBuyer);
         return ResponseEntity.ok(savedUser);
     }
 }
