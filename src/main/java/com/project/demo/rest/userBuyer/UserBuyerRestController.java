@@ -69,7 +69,7 @@ public class UserBuyerRestController {
                     existingUser.setDeliveryLocation(user.getDeliveryLocation());
                     existingUser.setPhoneNumber(user.getPhoneNumber());
                     existingUser.setEmail(user.getEmail());
-                    existingUser.setPassword(user.getPassword());
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
                     existingUser.setActive(user.isActive());
                     return UserBuyerRepository.save(existingUser);
                 })
