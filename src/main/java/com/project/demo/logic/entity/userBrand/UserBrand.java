@@ -149,18 +149,22 @@ public class UserBrand extends User {
         super.setPassword(password); // Llama al método setPassword() de la clase User
     }
 
+    @Override
     public Date getCreatedAt() {
         return createdAt;
     }
 
+    @Override
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
+    @Override
     public Date getUpdatedAt() {
         return updatedAt;
     }
 
+    @Override
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }

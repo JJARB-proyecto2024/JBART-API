@@ -45,6 +45,8 @@ public class UserBrandRestController {
         }
         user.setRole(optionalRole.get());
 
+        user.setStatus("Inactivo");
+
         return UserBrandRepository.save(user);
     }
 
