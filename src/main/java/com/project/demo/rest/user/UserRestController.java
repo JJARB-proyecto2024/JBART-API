@@ -37,24 +37,16 @@ public class UserRestController {
         return UserRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    @GetMapping("/filterByName/{name}")
+    /*@GetMapping("/filterByName/{name}")
     public List<User> getUserById(@PathVariable String name) {
         return UserRepository.findUsersWithCharacterInName(name);
-    }
+    }*/
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return UserRepository.findById(id)
                 .map(existingUser -> {
-                    existingUser.setName(user.getName());
-                    existingUser.setLastname(user.getLastname());
-                    existingUser.setPicture(user.getPicture());
-                    existingUser.setGenre(user.getGenre());
-                    existingUser.setDeliveryLocation(user.getDeliveryLocation());
-                    existingUser.setPhoneNumber(user.getPhoneNumber());
                     existingUser.setEmail(user.getEmail());
-                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-                    existingUser.setActive(user.isActive());
                     return UserRepository.save(existingUser);
                 })
                 .orElseGet(() -> {

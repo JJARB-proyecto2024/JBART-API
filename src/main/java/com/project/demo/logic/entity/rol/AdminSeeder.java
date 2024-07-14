@@ -1,7 +1,5 @@
 package com.project.demo.logic.entity.rol;
 
-import com.project.demo.logic.entity.category.Category;
-import com.project.demo.logic.entity.category.CategoryEnum;
 import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
@@ -10,8 +8,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -43,9 +39,6 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         User superAdmin = new User();
         superAdmin.setName("Super");
         superAdmin.setLastname("Admin");
-        superAdmin.setGenre("masculino");
-        superAdmin.setDeliveryLocation("San José, Costa Rica");
-        superAdmin.setPhoneNumber("71157914");
         superAdmin.setEmail("super.admin@gmail.com");
         superAdmin.setPassword("superadmin123");
         superAdmin.setActive(true);
@@ -59,9 +52,6 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         var user = new User();
         user.setName(superAdmin.getName());
         user.setLastname(superAdmin.getLastname());
-        user.setGenre(superAdmin.getGenre());
-        user.setDeliveryLocation(superAdmin.getDeliveryLocation());
-        user.setPhoneNumber(superAdmin.getPhoneNumber());
         user.setEmail(superAdmin.getEmail());
         user.setPassword(passwordEncoder.encode(superAdmin.getPassword()));
         user.setRole(optionalRole.get());
