@@ -86,6 +86,7 @@ public class AuthRestController {
             return null;
         }
         userBrand.setRole(optionalRole.get());
+        userBrand.setStatus("Inactivo");
         UserBrand savedUser = userRepository.save(userBrand);
         return ResponseEntity.ok(savedUser);
     }

@@ -78,6 +78,20 @@ public class UserBrandRestController {
                 });
     }
 
+    @PutMapping("/upStatus/{id}")
+    public UserBrand updateStatus(@PathVariable Long id, @RequestBody UserBrand user) {
+        return UserBrandRepository.findById(id)
+                .map(existingUser -> {
+                    existingUser.setStatus(user.getStatus());
+
+                    return UserBrandRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserBrandRepository.save(user);
+                });
+    }
+
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         UserBrandRepository.deleteById(id);
