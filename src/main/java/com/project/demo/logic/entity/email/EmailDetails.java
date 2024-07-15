@@ -6,6 +6,13 @@ public class EmailDetails {
     private String suject;
     private String emailBody;
 
+    public EmailDetails(EmailInfo fromAddress, EmailInfo toAddress, String subject, String emailBody) {
+        setFromAddress(fromAddress);
+        setToAddress(toAddress);
+        setSuject(subject);
+        setEmailBody(emailBody);
+    }
+
     public EmailInfo getFromAddress() {
         return fromAddress;
     }

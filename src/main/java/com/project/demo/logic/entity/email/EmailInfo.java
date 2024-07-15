@@ -5,6 +5,11 @@ public class EmailInfo {
     String name;
     String emailAddress;
 
+    public EmailInfo(String name, String emailAddress) {
+        setName(name);
+        setEmailAddress(emailAddress);
+    }
+
     public String getName() {
         return name;
     }
