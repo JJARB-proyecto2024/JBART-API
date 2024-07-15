@@ -3,6 +3,7 @@ package com.project.demo.rest.userBrand;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.email.EmailUtilityService;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -32,7 +33,7 @@ public class UserBrandRestController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private EmailService emailService;
+    private EmailUtilityService emailUtilityService;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
@@ -97,11 +98,11 @@ public class UserBrandRestController {
                         String emailBody = "¡Hola " + name + "!\n\n" +
                                 "Tu cuenta ha sido activada correctamente.";
 
-                        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+                        emailUtilityService.sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
                     } else {
                         String emailBody = "¡Hola " + name + "!\n\n" +
                                 "Tu cuenta ha sido desactivada.";
-                        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+                        emailUtilityService.sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
                     }
 
                     return UserBrandRepository.save(existingUser);
@@ -110,27 +111,6 @@ public class UserBrandRestController {
                     user.setId(id);
                     return UserBrandRepository.save(user);
                 });
-    }
-
-    private void sendStatusUpdateEmail(String name, String emailBody) {
-        try {
-            EmailDetails emailDetails = createEmailDetails(name, emailBody);
-            emailService.sendEmail(emailDetails);
-            System.out.println("El correo se envio con exito.");
-        } catch (IOException e) {
-            // Manejo de errores al enviar el correo
-            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
-        }
-    }
-
-    private EmailDetails createEmailDetails(String name, String emailBody) {
-        String email = "robertaraya382@gmail.com";
-        EmailInfo fromAddress = new EmailInfo("JBart", email);
-        EmailInfo toAddress = new EmailInfo(name, email);
-        System.out.println(name);
-        String subject = "Actualización de Estado";
-
-        return new EmailDetails(fromAddress, toAddress, subject, emailBody);
     }
 
     @DeleteMapping("/{id}")
@@ -144,7 +124,7 @@ public class UserBrandRestController {
         String emailBody = "¡Hola " + name + "!\n\n" +
                 "Lamentablemente, tu solicitud ha sido rechazada.";
 
-        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+        emailUtilityService.sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
 
     }
 

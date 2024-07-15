@@ -5,6 +5,7 @@ import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.email.EmailUtilityService;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -40,7 +41,7 @@ public class AuthRestController {
     private RoleRepository roleRepository;
 
     @Autowired
-    private EmailService emailService;
+    private EmailUtilityService emailUtilityService;
 
 
 
@@ -90,24 +91,9 @@ public class AuthRestController {
         userBrand.setRole(role);
         userBrand.setStatus("Inactivo");
 
-        sendStatusUpdateEmail(userBrand.getBrandName(), buildEmailBody(userBrand.getBrandName()));
+        emailUtilityService.sendStatusUpdateEmail(userBrand.getName(), buildEmailBody(userBrand.getName()));
 
         return ResponseEntity.ok(userRepository.save(userBrand));
-    }
-
-    private void sendStatusUpdateEmail(String name, String emailBody) {
-        EmailDetails emailDetails = createEmailDetails(name, emailBody);
-        try {
-            emailService.sendEmail(emailDetails);
-            System.out.println("El correo se envio con exito.");
-        } catch (IOException e) {
-            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
-        }
-    }
-
-    private EmailDetails createEmailDetails(String name, String emailBody) {
-        String email = "robertaraya382@gmail.com";
-        return new EmailDetails(new EmailInfo("JBart", email), new EmailInfo(name, email), "Actualización de Estado", emailBody);
     }
 
     private String buildEmailBody(String name) {
