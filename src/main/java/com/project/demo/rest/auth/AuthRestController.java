@@ -13,12 +13,14 @@ import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -83,46 +85,32 @@ public class AuthRestController {
     @PostMapping("/signup/brand")
     public ResponseEntity<?> registerUserBrand(@RequestBody UserBrand userBrand) {
         userBrand.setPassword(passwordEncoder.encode(userBrand.getPassword()));
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
-
-        if (optionalRole.isEmpty()) {
-            return null;
-        }
-        userBrand.setRole(optionalRole.get());
+        Role role = roleRepository.findByName(RoleEnum.USER_BRAND)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
+        userBrand.setRole(role);
         userBrand.setStatus("Inactivo");
 
-        String name = userBrand.getBrandName();
-        String emailBody = "Hola " + name + ",\n\n" +
-                "Gracias por registrarte en nuestra plataforma. Tu solicitud ha sido recibida y será procesada en las próximas horas por un administrador para validar la veracidad de  los datos registrados en el formulario de registro.\n\n" +
-                "Saludos,\n" +
-                "Equipo JBart";
+        sendStatusUpdateEmail(userBrand.getBrandName(), buildEmailBody(userBrand.getBrandName()));
 
-        sendStatusUpdateEmail(name, emailBody);
-
-        UserBrand savedUser = userRepository.save(userBrand);
-
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(userRepository.save(userBrand));
     }
 
-
     private void sendStatusUpdateEmail(String name, String emailBody) {
+        EmailDetails emailDetails = createEmailDetails(name, emailBody);
         try {
-            EmailDetails emailDetails = createEmailDetails(name, emailBody);
             emailService.sendEmail(emailDetails);
             System.out.println("El correo se envio con exito.");
         } catch (IOException e) {
-            // Manejo de errores al enviar el correo
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
     }
 
     private EmailDetails createEmailDetails(String name, String emailBody) {
         String email = "robertaraya382@gmail.com";
-        EmailInfo fromAddress = new EmailInfo("JBart", email);
-        EmailInfo toAddress = new EmailInfo(name, email);
-        System.out.println(name);
-        String subject = "Actualización de Estado";
+        return new EmailDetails(new EmailInfo("JBart", email), new EmailInfo(name, email), "Actualización de Estado", emailBody);
+    }
 
-        return new EmailDetails(fromAddress, toAddress, subject, emailBody);
+    private String buildEmailBody(String name) {
+        return String.format("Hola %s,\n\nGracias por registrarte en nuestra plataforma. Tu solicitud ha sido recibida y será procesada en las próximas horas por un administrador para validar la veracidad de los datos registrados en el formulario de registro.\n\nSaludos,\nEquipo JBart", name);
     }
 }
