@@ -103,6 +103,10 @@ public class AuthRestController {
         } catch (IOException e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
+        userBrand.setRole(optionalRole.get());
+        userBrand.setStatus("Inactivo");
+        UserBrand savedUser = userRepository.save(userBrand);
+        return ResponseEntity.ok(savedUser);
     }
 
     private EmailDetails createEmailDetails(String name, String emailBody) {
@@ -112,5 +116,19 @@ public class AuthRestController {
 
     private String buildEmailBody(String name) {
         return String.format("Hola %s,\n\nGracias por registrarte en nuestra plataforma. Tu solicitud ha sido recibida y será procesada en las próximas horas por un administrador para validar la veracidad de los datos registrados en el formulario de registro.\n\nSaludos,\nEquipo JBart", name);
+    }
+
+    @PostMapping("/signup/buyer")
+    public ResponseEntity<?> registerUserBuyer(@RequestBody UserBuyer userBuyer) {
+        userBuyer.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
+        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
+
+        if (optionalRole.isEmpty()) {
+            return null;
+        }
+        userBuyer.setRole(optionalRole.get());
+        userBuyer.setStatus("Activo");
+        UserBuyer savedUser = userRepository.save(userBuyer);
+        return ResponseEntity.ok(savedUser);
     }
 }
