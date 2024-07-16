@@ -12,6 +12,7 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,10 +104,6 @@ public class AuthRestController {
         } catch (IOException e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
-        userBrand.setRole(optionalRole.get());
-        userBrand.setStatus("Inactivo");
-        UserBrand savedUser = userRepository.save(userBrand);
-        return ResponseEntity.ok(savedUser);
     }
 
     private EmailDetails createEmailDetails(String name, String emailBody) {
