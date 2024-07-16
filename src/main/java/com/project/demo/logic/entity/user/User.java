@@ -14,17 +14,40 @@ import java.util.List;
 
 @Table(name = "user")
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String lastname;
     @Column(unique = true, length = 100, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String status;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    private String name;
+    private String lastname;
+
+
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -44,10 +67,16 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     // Constructors
     public User() {}
-
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -81,21 +110,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
     public String getEmail() {
         return email;
