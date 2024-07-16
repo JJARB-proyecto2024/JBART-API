@@ -43,13 +43,14 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
 
     private void createUserBuyer() {
         UserBrand userBrand = new UserBrand();
+        userBrand.setLegalId(Long.parseLong("3101123456"));
         userBrand.setLogoType("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif");
         userBrand.setBrandName("Lorem Ipsum");
         userBrand.setLegalRepresentativeName("Pedro Pascal");
         userBrand.setMainLocationAddress("San Rafael Arriba, Desamparados");
         userBrand.setBrandCategories("Camisas, Pantalonetas");
-        userBrand.setEmail("user.buyer@gmail.com");
-        userBrand.setPassword("userbuyer123");
+        userBrand.setEmail("user.brand@gmail.com");
+        userBrand.setPassword("userbrand123");
         userBrand.setActive(true);
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
         Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());

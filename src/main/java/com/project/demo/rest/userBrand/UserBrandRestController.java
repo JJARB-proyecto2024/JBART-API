@@ -66,8 +66,8 @@ public class UserBrandRestController {
                     existingUser.setMainLocationAddress(user.getMainLocationAddress());
                     existingUser.setBrandCategories(user.getBrandCategories());
                     existingUser.setEmail(user.getEmail());
-                    existingUser.setPassword(user.getPassword());
-
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                    existingUser.setActive(user.isActive());
                     return UserBrandRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
