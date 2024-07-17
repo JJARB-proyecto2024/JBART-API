@@ -14,16 +14,16 @@ public class UserBuyer extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "picture", nullable = false)
+    @Column(name = "picture", nullable = true)
     private String picture;
 
-    @Column(name="genre", nullable = false)
+    @Column(name="genre", nullable = true)
     private String genre;
 
-    @Column(name="delivery_location", nullable = false)
+    @Column(name="delivery_location", nullable = true)
     private String deliveryLocation;
 
-    @Column(name="phone_number", nullable = false)
+    @Column(name="phone_number", nullable = true)
     private String phoneNumber;
 
     @CreationTimestamp
