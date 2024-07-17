@@ -87,6 +87,7 @@ public class UserRestController {
 
     // Endpoint para generar OTP y enviarlo por correo
     @PostMapping("/generatePasswordResetOtp")
+    @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
         String email = request.getEmail();
         String otpCode = request.getOtpCode();
@@ -108,6 +109,7 @@ public class UserRestController {
 
     // Endpoint para validar OTP y actualizar la contraseña
     @PostMapping("/resetPassword")
+    @PreAuthorize("permitAll")
     public boolean resetPassword(@RequestBody ValidateOtpRequest request) {
         String email = request.getEmail(); // Correo electrónico fijo
         String otpCode = request.getOtpCode();
