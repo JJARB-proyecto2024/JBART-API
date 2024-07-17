@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.rol;
 
+import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.context.ApplicationListener;
@@ -15,16 +16,18 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final CategoryRepository categoryRepository;
 
 
     public AdminSeeder(
             RoleRepository roleRepository,
-            UserRepository  userRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            CategoryRepository categoryRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override

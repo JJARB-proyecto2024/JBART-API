@@ -2,6 +2,9 @@ package com.project.demo.rest.userBuyer;
 
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
+import com.project.demo.logic.entity.rol.RoleRepository;
+import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usersBuyer")
 public class UserBuyerRestController {
+
     @Autowired
     private UserBuyerRepository UserBuyerRepository;
 
@@ -66,7 +70,12 @@ public class UserBuyerRestController {
                 .map(existingUser -> {
                     existingUser.setName(user.getName());
                     existingUser.setLastname(user.getLastname());
+                    existingUser.setPicture(user.getPicture());
+                    existingUser.setGenre(user.getGenre());
+                    existingUser.setDeliveryLocation(user.getDeliveryLocation());
+                    existingUser.setPhoneNumber(user.getPhoneNumber());
                     existingUser.setEmail(user.getEmail());
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
                     return UserBuyerRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
