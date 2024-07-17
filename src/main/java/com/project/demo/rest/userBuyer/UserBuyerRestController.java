@@ -6,12 +6,15 @@ import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import com.project.demo.logic.entity.rol.RoleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +28,7 @@ public class UserBuyerRestController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -44,6 +48,8 @@ public class UserBuyerRestController {
             return null;
         }
         user.setRole(optionalRole.get());
+
+        user.setStatus("Activo");
 
         return UserBuyerRepository.save(user);
     }
@@ -70,7 +76,7 @@ public class UserBuyerRestController {
                     existingUser.setPhoneNumber(user.getPhoneNumber());
                     existingUser.setEmail(user.getEmail());
                     existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-                    existingUser.setActive(user.isActive());
+                    existingUser.setStatus(user.getStatus());
                     return UserBuyerRepository.save(existingUser);
                 })
                 .orElseGet(() -> {

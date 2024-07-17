@@ -51,7 +51,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         userBrand.setBrandCategories("Camisas, Pantalonetas");
         userBrand.setEmail("user.brand@gmail.com");
         userBrand.setPassword("userbrand123");
-        userBrand.setActive(true);
+        userBrand.setStatus("Activo");
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
         Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
 
@@ -69,7 +69,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         user.setEmail(userBrand.getEmail());
         user.setPassword(passwordEncoder.encode(userBrand.getPassword()));
         user.setRole(optionalRole.get());
-        user.setActive(userBrand.isActive());
+        user.setStatus(userBrand.getStatus());
         userBrandRepository.save(user);
     }
 }

@@ -50,7 +50,7 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
         userBuyer.setPhoneNumber("71157914");
         userBuyer.setEmail("user.buyer@gmail.com");
         userBuyer.setPassword("userbuyer123");
-        userBuyer.setActive(true);
+        userBuyer.setStatus("Activo");
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
         Optional<User> optionalUser = userRepository.findByEmail(userBuyer.getEmail());
 
@@ -68,8 +68,7 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
         user.setEmail(userBuyer.getEmail());
         user.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
         user.setRole(optionalRole.get());
-        user.setActive(userBuyer.isActive());
-
+        user.setStatus(userBuyer.getStatus());
         userRepository.save(user);
     }
 

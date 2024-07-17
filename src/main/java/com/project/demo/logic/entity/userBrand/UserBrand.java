@@ -4,6 +4,7 @@ import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.util.Date;
 
 
@@ -32,7 +33,7 @@ public class UserBrand extends User {
 
     @Lob
     @Column(name = "legal_documents")
-    private byte[] legalDocuments;
+    private String legalDocuments;
 
     @Column(name = "brand_categories", nullable = false)
     private String brandCategories;
@@ -123,11 +124,11 @@ public class UserBrand extends User {
         this.mainLocationAddress = mainLocationAddress;
     }
 
-    public byte[] getLegalDocuments() {
+    public String getLegalDocuments() {
         return legalDocuments;
     }
 
-    public void setLegalDocuments(byte[] legalDocuments) {
+    public void setLegalDocuments(String legalDocuments) {
         this.legalDocuments = legalDocuments;
     }
 
@@ -149,18 +150,22 @@ public class UserBrand extends User {
         super.setPassword(password); // Llama al método setPassword() de la clase User
     }
 
+    @Override
     public Date getCreatedAt() {
         return createdAt;
     }
 
+    @Override
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
+    @Override
     public Date getUpdatedAt() {
         return updatedAt;
     }
 
+    @Override
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
