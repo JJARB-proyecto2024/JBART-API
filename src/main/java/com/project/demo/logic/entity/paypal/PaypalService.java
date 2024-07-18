@@ -3,6 +3,7 @@ package com.project.demo.logic.entity.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class PaypalService {
 
-    private final PaypalConfig apiContext;
+    @Autowired
+    private PaypalConfig apiContext;
 
     public Payment createPayment(
             Double total,
