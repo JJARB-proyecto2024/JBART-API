@@ -1,7 +1,7 @@
 package com.project.demo.logic.entity.order;
 
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
-import com.project.demo.logic.product.Product;
+import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
 
 @Entity
