@@ -29,8 +29,6 @@ public class OrderController {
     @Autowired
     private ProductRepository productRepository;
 
-
-
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public List<Order> getAllOrders() {
@@ -43,15 +41,13 @@ public class OrderController {
         if (order == null) {
             throw new IllegalArgumentException("Order cannot be null");
         }
-
-        // You can add more validations as needed
-
         return orderRepository.save(order);
     }
 
     @GetMapping("/{id}")
     public Order getOrderById(@PathVariable Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
     }
 
     @PutMapping("/{id}")
@@ -59,7 +55,6 @@ public class OrderController {
     public Order updateOrder(@PathVariable Long id, @RequestBody Order order) {
         return orderRepository.findById(id)
                 .map(existingOrder -> {
-                    // Actualizar los campos del pedido
                     existingOrder.setQuantity(order.getQuantity());
                     existingOrder.setSubTotal(order.getSubTotal());
                     existingOrder.setShippingCost(order.getShippingCost());
@@ -67,7 +62,6 @@ public class OrderController {
                     existingOrder.setStatus(order.getStatus());
                     existingOrder.setUpdatedAt(order.getUpdatedAt());
 
-                    // Actualizar UserBuyer si se proporciona
                     if (order.getUserBuyer() != null && order.getUserBuyer().getId() != null) {
                         Optional<UserBuyer> userBuyer = userBuyerRepository.findById(order.getUserBuyer().getId());
                         if (userBuyer.isPresent()) {
@@ -77,7 +71,6 @@ public class OrderController {
                         }
                     }
 
-                    // Actualizar Product si se proporciona
                     if (order.getProduct() != null && order.getProduct().getId() != null) {
                         Optional<Product> product = productRepository.findById(order.getProduct().getId());
                         if (product.isPresent()) {
@@ -90,7 +83,6 @@ public class OrderController {
                     return orderRepository.save(existingOrder);
                 })
                 .orElseGet(() -> {
-                    // Si el pedido no existe, configuramos el ID y lo guardamos como nuevo
                     order.setId(id);
                     return orderRepository.save(order);
                 });
@@ -103,6 +95,22 @@ public class OrderController {
             throw new RuntimeException("Order not found with id: " + id);
         }
         orderRepository.deleteById(id);
+    }
+
+    @GetMapping("/brand")
+    @PreAuthorize("hasAnyRole('USER_BRAND')")
+    public List<Order> getOrdersForBrand() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
+        return orderRepository.findByBrandId(currentUser.getId());
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasAnyRole('USER')")
+    public List<Order> getOrdersForUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
+        return orderRepository.findByUserId(currentUser.getId());
     }
 
     @GetMapping("/me")
