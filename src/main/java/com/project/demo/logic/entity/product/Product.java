@@ -22,7 +22,7 @@ public class Product {
     @Column(name = "picture", nullable = true)
     private String picture;
     @Column(name = "rate", nullable = true)
-    private Double rate;
+    private Integer rate;
     @Column(name = "status",nullable = false)
     private String status;
 
@@ -98,11 +98,11 @@ public class Product {
         return this;
     }
 
-    public Double getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(Double rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 
