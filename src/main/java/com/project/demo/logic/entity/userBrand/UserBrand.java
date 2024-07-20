@@ -39,7 +39,7 @@ public class UserBrand extends User {
     private String brandCategories;
 
     @Column(name = "rate", nullable = true)
-    private Double rate;
+    private Integer rate;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -173,11 +173,11 @@ public class UserBrand extends User {
         this.updatedAt = updatedAt;
     }
 
-    public Double getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(Double rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 }
