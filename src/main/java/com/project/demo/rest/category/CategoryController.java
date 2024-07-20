@@ -21,7 +21,7 @@ public class CategoryController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','USER','SUPER_ADMIN')")
     public List<Category> getAllCategory() {
         return categoryRepository.findAll();
     }
@@ -66,13 +66,6 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
     public void deleteCategory(@PathVariable Long id) {
         categoryRepository.deleteById(id);
-    }
-
-    @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
-    public Category authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (Category) authentication.getPrincipal();
     }
 
 }

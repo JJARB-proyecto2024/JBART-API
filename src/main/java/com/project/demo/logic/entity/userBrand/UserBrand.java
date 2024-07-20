@@ -1,11 +1,13 @@
 package com.project.demo.logic.entity.userBrand;
 
+import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -51,6 +53,8 @@ public class UserBrand extends User {
 
     public UserBrand() {}
 
+    @OneToMany(mappedBy = "userBrand", fetch = FetchType.LAZY)
+    private List<Product> products;
 
     // Métodos heredados de User, no es necesario redefinir getEmail() y getPassword()
 
