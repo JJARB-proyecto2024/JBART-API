@@ -54,6 +54,7 @@ public class CategoryController {
                 .map(existingCategory -> {
                     existingCategory.setName(category.getName());
                     existingCategory.setDescription(category.getDescription());
+                    existingCategory.setImage(category.getImage());
                     return categoryRepository.save(existingCategory);
                 })
                 .orElseGet(() -> {
