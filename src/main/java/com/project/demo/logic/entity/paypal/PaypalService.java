@@ -1,6 +1,7 @@
 package com.project.demo.logic.entity.paypal;
 
 import com.paypal.api.payments.*;
+import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.Locale;
 public class PaypalService {
 
     @Autowired
-    private PaypalConfig apiContext;
+    private APIContext apiContext;
 
     public Payment createPayment(
             Double total,
@@ -50,25 +51,20 @@ public class PaypalService {
         redirectUrls.setReturnUrl(successUrl);
         payment.setRedirectUrls(redirectUrls);
 
-        return payment.create(apiContext.toString());
+        return payment.create(apiContext);
     }
 
     public  Payment excecutePayment(
             String paymentId,
             String payerId
-    ){
+    ) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
         PaymentExecution paymentExecution = new PaymentExecution();
         paymentExecution.setPayerId(payerId);
 
-        try {
-            return payment.execute(apiContext.toString(), paymentExecution);
-        } catch (PayPalRESTException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return payment.execute(apiContext, paymentExecution);
     }
 
 }
