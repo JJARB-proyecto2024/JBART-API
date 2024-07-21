@@ -72,14 +72,6 @@ public class Category {
         this.image = image;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
