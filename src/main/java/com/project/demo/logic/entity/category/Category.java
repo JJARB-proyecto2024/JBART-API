@@ -1,10 +1,12 @@
 package com.project.demo.logic.entity.category;
 
+import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "category")
 @Entity
@@ -12,11 +14,10 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CategoryEnum name;
+    private String name;
 
     private String description;
 
@@ -28,22 +29,29 @@ public class Category {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Product> products;
+
     public Category() {
     }
 
-    public Integer getId() {
+    public Category(List<Product> products) {
+        this.products = products;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public CategoryEnum getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(CategoryEnum name) {
+    public void setName(String name) {
         this.name = name;
     }
 
