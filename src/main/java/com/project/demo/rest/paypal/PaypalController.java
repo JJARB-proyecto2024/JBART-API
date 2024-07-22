@@ -1,79 +1,46 @@
 package com.project.demo.rest.paypal;
 
-import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.project.demo.logic.entity.paypal.PaypalService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@Slf4j
+import java.util.List;
+
+@RestController
+@RequestMapping("/paypal")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PaypalController {
     @Autowired
     private PaypalService paypalService;
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
-
-    @PostMapping("/payment/create")
-    public RedirectView createPayment(
-            @RequestParam("method") String method,
-            @RequestParam("amount") String amount,
-            @RequestParam("currency") String currency,
-            @RequestParam("description") String description
-    ) {
+    @PostMapping("/createPayment")
+    public ResponseEntity<Payment> createPayment(
+            @RequestBody List<ItemDto> items,
+            @RequestHeader("host") String host)
+    {
         try {
-            String cancelUrl = "http://localhost:8080/payment/cancel";
-            String successUrl = "http://localhost:8080/payment/success";
-            Payment payment = paypalService.createPayment(
-                    Double.valueOf(amount),
-                    currency,
-                    method,
-                    "sale",
-                    description,
-                    cancelUrl,
-                    successUrl
-            );
-            for (Links links : payment.getLinks()) {
-                if (links.getRel().equals("approval_url")) {
-                    return new RedirectView(links.getHref());
-                }
-            }
-        }catch (PayPalRESTException e)  {
-            log.error("Error happened during payment creation!", e);
+            String baseUrl = "http://" + host;
+            Payment payment = paypalService.createPayment(items, baseUrl);
+            return  new ResponseEntity<>(payment, HttpStatus.CREATED);
+        }catch (PayPalRESTException e){
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new RedirectView("/payment/error");
     }
 
-    @GetMapping("/payment/success")
-    public  String paymentSuccess(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    @PostMapping("/executePayment")
+    public ResponseEntity<Payment> executePayment(@RequestBody ExecutePaymentDto dto) {
         try {
-            Payment payment = paypalService.excecutePayment(paymentId, payerId);
-            if (payment.getState().equals("approved")) {
-                return "paymentSuccess";
-            }
-        }catch (PayPalRESTException e) {
-            log.error("Error happened during payment creation!", e);
+            Payment payment = paypalService.excecutePayment(dto.getPaymentId(), dto.getPayerId());
+            return new ResponseEntity<>(payment, HttpStatus.OK);
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return "paymentSuccess";
-    }
-
-    @GetMapping("/payment/cancel")
-    public String paymentCancel() {
-        return "paymentCancel";
-    }
-
-    @GetMapping("/payment/error")
-    public String paymentError() {
-        return "paymentError";
     }
 
 }
