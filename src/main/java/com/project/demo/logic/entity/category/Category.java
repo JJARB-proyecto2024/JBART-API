@@ -21,6 +21,7 @@ public class Category {
 
     private String description;
 
+    private String image;
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -61,6 +62,14 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Date getCreatedAt() {
