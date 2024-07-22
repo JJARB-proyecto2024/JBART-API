@@ -17,32 +17,32 @@ public class PaypalController {
     @Autowired
     private PaypalService paypalService;
 
-    @PostMapping("/createPayment")
-    public ResponseEntity<String> createPayment(
-            @RequestBody List<ItemDto> items,
-            @RequestHeader("host") String host) {
-        try {
-            String baseUrl = "http://" + host;
-            Payment payment = paypalService.createPayment(items, baseUrl);
-            return new ResponseEntity<>(payment.toString(), HttpStatus.CREATED);
-        } catch (PayPalRESTException e) {
-            // Log error details and return a more informative message
-            e.printStackTrace();
-            return new ResponseEntity<>("Error creating payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    @PostMapping("/executePayment")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Payment> executePayment(@RequestBody ExecutePaymentDto dto) {
-        try {
-            Payment payment = paypalService.excecutePayment(dto.getPaymentId(), dto.getPayerId());
-            return new ResponseEntity<>(payment, HttpStatus.OK);
-        } catch (PayPalRESTException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PostMapping("/createPayment")
+//    public ResponseEntity<String> createPayment(
+//            @RequestBody List<ItemDto> items,
+//            @RequestHeader("host") String host) {
+//        try {
+//            String baseUrl = "http://" + host;
+//            Payment payment = paypalService.createPayment(items, baseUrl);
+//            return new ResponseEntity<>(payment.toString(), HttpStatus.CREATED);
+//        } catch (PayPalRESTException e) {
+//            // Log error details and return a more informative message
+//            e.printStackTrace();
+//            return new ResponseEntity<>("Error creating payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//
+//
+//    @PostMapping("/executePayment")
+//    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<Payment> executePayment(@RequestBody ExecutePaymentDto dto) {
+//        try {
+//            Payment payment = paypalService.excecutePayment(dto.getPaymentId(), dto.getPayerId());
+//            return new ResponseEntity<>(payment, HttpStatus.OK);
+//        } catch (PayPalRESTException e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

@@ -1,5 +1,7 @@
 package com.project.demo.rest.auth;
 
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.PayPalRESTException;
 import com.project.demo.logic.entity.Otp.Otp;
 import com.project.demo.logic.entity.Otp.OtpRepository;
 import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
@@ -8,6 +10,7 @@ import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.paypal.PaypalService;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -16,19 +19,19 @@ import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
+import com.project.demo.rest.paypal.ExecutePaymentDto;
+import com.project.demo.rest.paypal.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -51,6 +54,9 @@ public class AuthRestController {
 
     @Autowired
     private OtpRepository otpRepository;
+
+    @Autowired
+    private PaypalService paypalService;
     
 
     private final AuthenticationService authenticationService;
@@ -215,6 +221,34 @@ public class AuthRestController {
         String subject = "Recuperación de contraseña - Código de verificación";
 
         return new EmailDetails(fromAddress, toAddress, subject, emailBody);
+    }
+
+    @PostMapping("/createPayment")
+    public ResponseEntity<String> createPayment(
+            @RequestBody List<ItemDto> items,
+            @RequestHeader("host") String host) {
+        try {
+            String baseUrl = "http://" + host;
+            Payment payment = paypalService.createPayment(items, baseUrl);
+            return new ResponseEntity<>(payment.toString(), HttpStatus.CREATED);
+        } catch (PayPalRESTException e) {
+            // Log error details and return a more informative message
+            e.printStackTrace();
+            return new ResponseEntity<>("Error creating payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("/executePayment")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Payment> executePayment(@RequestBody ExecutePaymentDto dto) {
+        try {
+            Payment payment = paypalService.excecutePayment(dto.getPaymentId(), dto.getPayerId());
+            return new ResponseEntity<>(payment, HttpStatus.OK);
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
