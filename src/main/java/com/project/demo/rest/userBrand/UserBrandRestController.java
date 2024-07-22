@@ -35,7 +35,7 @@ public class UserBrandRestController {
     private EmailService emailService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
     public List<UserBrand> getAllUsers() {
         return UserBrandRepository.findAll();
     }

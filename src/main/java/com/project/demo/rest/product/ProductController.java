@@ -28,7 +28,7 @@ public class ProductController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
