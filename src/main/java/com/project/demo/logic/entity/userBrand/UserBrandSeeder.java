@@ -34,14 +34,14 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         this.createUserBuyer();
-        this.createUserBuyer2();
+        /*this.createUserBuyer2();
         this.createUserBuyer3();
         this.createUserBuyer4();
         this.createUserBuyer5();
         this.createUserBuyer6();
         this.createUserBuyer7();
         this.createUserBuyer8();
-        this.createUserBuyer9();
+        this.createUserBuyer9();*/
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         user.setRate(userBrand.getRate());
         userBrandRepository.save(user);
     }
-
+/*
     private void createUserBuyer2() {
         UserBrand userBrand = new UserBrand();
         userBrand.setLegalId(Long.parseLong("3101123986"));
@@ -354,4 +354,6 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         user.setRate(userBrand.getRate());
         userBrandRepository.save(user);
     }
+
+ */
 }

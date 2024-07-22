@@ -1,6 +1,7 @@
 package com.project.demo.logic.entity.product;
 
 import com.project.demo.logic.entity.category.Category;
+import com.project.demo.logic.entity.userBrand.UserBrand;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,6 +30,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_brand_id", referencedColumnName = "id", nullable = false)
+    private UserBrand userBrand;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -96,6 +101,14 @@ public class Product {
         this.category = category;
 
         return this;
+    }
+
+    public UserBrand getUserBrand() {
+        return userBrand;
+    }
+
+    public void setUserBrand(UserBrand userBrand) {
+        this.userBrand = userBrand;
     }
 
     public Integer getRate() {

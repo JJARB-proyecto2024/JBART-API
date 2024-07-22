@@ -7,6 +7,8 @@ import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
+import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -26,6 +28,8 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
     private final ProductRepository productRepository;
 
+    private final UserBrandRepository userBrandRepository;
+
 
 
     public ProductSeeder(
@@ -33,25 +37,28 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             CategoryRepository categoryRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository,
+            UserBrandRepository userBrandRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.userBrandRepository = userBrandRepository;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         this.createProduct1();
-        this.createProduct2();
+        /*this.createProduct2();
         this.createProduct3();
         this.createProduct4();
         this.createProduct5();
         this.createProduct6();
         this.createProduct7();
         this.createProduct8();
-        this.createProduct9();
+        this.createProduct9();*/
+
     }
 
     private void createProduct1() {
@@ -66,6 +73,21 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
         Optional<Category> optionalCategory = categoryRepository.findByName("Calzado");
 
+        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Lorem Ipsum");
+
+        if (optionalCategory.isEmpty()) {
+            System.err.println("Category 'Calzado' not found.");
+            return;
+        }
+
+        if (optionalUserBrand.isEmpty()) {
+            System.err.println("User brand 'Lorem Ipsum' not found.");
+            return;
+        }
+
+        Category category = optionalCategory.get();
+        UserBrand userBrand = optionalUserBrand.get();
+
         var product = new Product();
         product.setName(productNew.getName());
         product.setPrice(productNew.getPrice());
@@ -74,10 +96,11 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
         product.setStatus(productNew.getStatus());
         product.setRate(productNew.getRate());
 
-        product.setCategory(optionalCategory.get());
+        product.setCategory(category);
+        product.setUserBrand(userBrand);
         productRepository.save(product);
     }
-
+/*
     private void createProduct2() {
         Product productNew = new Product();
 
@@ -89,6 +112,21 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
         productNew.setRate(1);
 
         Optional<Category> optionalCategory = categoryRepository.findByName("Camisas");
+
+        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Ldfsf");
+
+        if (optionalCategory.isEmpty()) {
+            System.err.println("Category 'Calzado' not found.");
+            return;
+        }
+
+        if (optionalUserBrand.isEmpty()) {
+            System.err.println("User brand 'Ldfsf' not found.");
+            return;
+        }
+
+        Category category = optionalCategory.get();
+        UserBrand userBrand = optionalUserBrand.get();
 
         var product = new Product();
         product.setName(productNew.getName());
@@ -268,6 +306,6 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
         product.setCategory(optionalCategory.get());
         productRepository.save(product);
     }
-
+*/
 
 }

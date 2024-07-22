@@ -3,6 +3,9 @@ package com.project.demo.logic.entity.order;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "orders")
@@ -21,6 +24,14 @@ public class Order {
     private Double shippingCost;
     private Double total;
     private String status;
+
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     public Long getId() {
         return Id;
@@ -85,4 +96,12 @@ public class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Date getCreatedAt() {return createdAt;}
+
+    public void setCreatedAt(Date createdAt) {this.createdAt = createdAt;}
+
+    public Date getUpdatedAt() {return updatedAt;}
+
+    public void setUpdatedAt(Date updatedAt) {this.updatedAt = updatedAt;}
 }
