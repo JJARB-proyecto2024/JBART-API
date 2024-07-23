@@ -28,13 +28,13 @@ public class ProductController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
     public Product addProduct(@RequestBody Product product) {
 
         if (product == null || product.getCategory() == null || product.getCategory().getId() == null) {
@@ -61,7 +61,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
         return productRepository.findById(id)
                 .map(existingProduct -> {
@@ -80,16 +80,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-    public void deleteUser(@PathVariable Long id) {
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
+    public void deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
     }
-
-    @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
-    public User authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
-    }
-
 }

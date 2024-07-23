@@ -7,12 +7,17 @@ import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.Optional;
+
 
 import com.project.demo.logic.entity.rol.RoleRepository;
 
@@ -87,6 +92,25 @@ public class UserBuyerRestController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         UserBuyerRepository.deleteById(id);
+    }
+
+    @PutMapping("/deactivate")
+    public ResponseEntity<?> deactivateUser(@RequestBody UserBuyer user) {
+
+        Optional<UserBuyer> optionalUser = UserBuyerRepository.findById(user.getId());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        }
+
+        UserBuyer userResult = optionalUser.get();
+        if (userResult.getPassword().equals(user.getPassword()) ) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Contraseña incorrecta.");
+        }
+
+        userResult.setStatus("Desactivado");
+        UserBuyerRepository.save(userResult);
+
+        return ResponseEntity.ok("Cuenta desactivada con éxito.");
     }
 
     @GetMapping("/me")
