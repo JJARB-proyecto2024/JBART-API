@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.userBrand;
 
+import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
@@ -55,6 +56,9 @@ public class UserBrand extends User {
 
     @OneToMany(mappedBy = "userBrand", fetch = FetchType.LAZY)
     private List<Product> products;
+
+    @OneToMany(mappedBy = "userBrand", fetch = FetchType.LAZY)
+    private List<RateBrand> rateBrand;
 
     // Métodos heredados de User, no es necesario redefinir getEmail() y getPassword()
 
