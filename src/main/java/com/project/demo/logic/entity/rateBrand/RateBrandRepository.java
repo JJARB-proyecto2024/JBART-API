@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface RateBrandRepository extends JpaRepository<RateBrand, Long> {
 
-    @Query("SELECT r FROM RateBrand r WHERE r.userBrand = ?1")
-    Optional<RateBrand> findByIdBrand(Long id);
+    @Query("SELECT r FROM RateBrand r WHERE r.userBuyer.id = ?1 AND r.userBrand.id = ?2")
+    Optional<RateBrand> findByIdBuyerAndIdBrand(Long buyerId, Long brandId);
 
-    @Query("SELECT r FROM RateBrand r WHERE r.userBuyer = ?1")
-    Optional<RateBrand> findByIdBuyer(Long id);
 }

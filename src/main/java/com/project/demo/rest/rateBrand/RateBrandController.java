@@ -4,6 +4,7 @@ import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.rateBrand.RateBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.userBuyer.UserBuyerRestController;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class RateBrandController {
 
 
     @Autowired
+    private UserBuyerRestController userBuyerRestController;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
@@ -42,30 +46,47 @@ public class RateBrandController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
     public RateBrand addRateBrand(@RequestBody RateBrand rateBrand) {
 
-        if (rateBrand == null || rateBrand.getRate() == null || rateBrand.getUserBrand().getId() == null || rateBrand.getUserBuyer().getId() == null) {
+        if (rateBrand == null || rateBrand.getRate() == null || rateBrand.getUserBrand().getId() == null) {
             throw new IllegalArgumentException("RateBrand or users cannot be null");
         }
 
         Long brandId = rateBrand.getUserBrand().getId();
-        Long buyerId = rateBrand.getUserBuyer().getId();
+        Long buyerId = userBuyerRestController.authenticatedUser().getId();
 
         UserBrand userBrand = userBrandRepository.findById(brandId)
                 .orElseThrow(() -> new IllegalArgumentException("User Brand not found with id: " + brandId));
 
+
         UserBuyer userBuyer = userBuyerRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("User Buyer not found with id: " + buyerId));
 
-        rateBrand.setUserBrand(userBrand);
-        rateBrand.setUserBuyer(userBuyer);
+        // Check if the user has already rated this brand
+        Optional<RateBrand> existingRating = rateBrandRepository.findByIdBuyerAndIdBrand(buyerId, brandId);
 
-        return rateBrandRepository.save(rateBrand);
+        if (existingRating.isPresent()) {
+            throw new IllegalArgumentException("User has already rated this brand.");
+        }else {
+
+            rateBrand.setUserBrand(userBrand);
+            rateBrand.setUserBuyer(userBuyer);
+
+            return rateBrandRepository.save(rateBrand);
+        }
     }
 
     @GetMapping("/{id}")
     public RateBrand getRateBrandById(@PathVariable Long id) {
         return rateBrandRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    @GetMapping("/rate/{brandId}")
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
+    public Optional<RateBrand> hasRatedBrand(@PathVariable Long brandId) {
+        Long userId = userBuyerRestController.authenticatedUser().getId();
+
+        return rateBrandRepository.findByIdBuyerAndIdBrand(userId,brandId);
     }
 }
