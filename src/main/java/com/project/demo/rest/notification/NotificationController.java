@@ -21,6 +21,11 @@ public class NotificationController {
         return notificationRepository.findAll();
     }
 
+    @GetMapping("/user/{id}")
+    public List<Notification> getNotificationsByUserId(@PathVariable Long id) {
+        return notificationRepository.findByUserId(id);
+    }
+
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public Notification addNotification(@RequestBody Notification notification) {

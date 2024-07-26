@@ -57,8 +57,6 @@ public class UserBrand extends User {
     @OneToMany(mappedBy = "userBrand", fetch = FetchType.LAZY)
     private List<Product> products;
 
-    @OneToMany(mappedBy = "userBrand", fetch = FetchType.LAZY)
-    private List<Notification> notifications;
     // Métodos heredados de User, no es necesario redefinir getEmail() y getPassword()
 
     @Override

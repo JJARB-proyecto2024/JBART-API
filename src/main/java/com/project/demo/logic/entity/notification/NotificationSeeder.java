@@ -39,43 +39,21 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
     }
 
     private void createNotification() {
-        Optional<User> userOptional = userRepository.findByEmail("super.admin@gmail.com");
-        Optional<UserBuyer> userBuyerOptional = userBuyerRepository.findByEmail("user.buyer@gmail.com");
-        Optional<UserBrand> userBrandOptional = userBrandRepository.findByEmail("user.brand@gmail.com");
+        Optional<User> userOptional = userRepository.findByEmail("user.buyer@gmail.com");
 
         if (userOptional.isEmpty()) {
             System.err.println("User not found");
             return;
         }
-        if (userBuyerOptional.isEmpty()) {
-            System.err.println("User not found");
-            return;
-        }
-        if (userBrandOptional.isEmpty()) {
-            System.err.println("User not found");
-            return;
-        }
+
 
         User user = userOptional.get();
-        UserBuyer userBuyer = userBuyerOptional.get();
-        UserBrand userBrand = userBrandOptional.get();
 
         Notification notification = new Notification();
         notification.setUser(user);
-        notification.setUserBuyer(userBuyer);
-        notification.setUserBrand(userBrand);
         notification.setTitle("Notification Title");
         notification.setDescription("Notification Description");
         notification.setSeen(false);
         notificationRepository.save(notification);
-
-        Notification notification2 = new Notification();
-        notification2.setUser(user);
-        notification2.setUserBuyer(userBuyer);
-        notification2.setUserBrand(userBrand);
-        notification2.setTitle("Notification Title");
-        notification2.setDescription("Notification Description");
-        notification2.setSeen(false);
-        notificationRepository.save(notification2);
     }
 }

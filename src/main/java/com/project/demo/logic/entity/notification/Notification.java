@@ -29,14 +29,6 @@ public class Notification {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_buyer_id", referencedColumnName = "id")
-    private UserBuyer userBuyer;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_brand_id", referencedColumnName = "id")
-    private UserBrand userBrand;
-
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -86,22 +78,6 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public UserBuyer getUserBuyer() {
-        return userBuyer;
-    }
-
-    public void setUserBuyer(UserBuyer userBuyer) {
-        this.userBuyer = userBuyer;
-    }
-
-    public UserBrand getUserBrand() {
-        return userBrand;
-    }
-
-    public void setUserBrand(UserBrand userBrand) {
-        this.userBrand = userBrand;
     }
 
     public Date getCreatedAt() {

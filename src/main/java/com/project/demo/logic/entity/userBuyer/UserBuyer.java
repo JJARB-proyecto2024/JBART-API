@@ -36,8 +36,6 @@ public class UserBuyer extends User {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
-    private List<Notification> notifications;
     public UserBuyer() {
     }
 
