@@ -39,7 +39,7 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
     }
 
     private void createNotification() {
-        Optional<User> userOptional = userRepository.findByEmail("user.buyer@gmail.com");
+        Optional<User> userOptional = userRepository.findByEmail("super.admin@gmail.com");
 
         if (userOptional.isEmpty()) {
             System.err.println("User not found");
@@ -47,13 +47,15 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
         }
 
 
-        User user = userOptional.get();
-
+        User user = new User();
+        user.setId(userOptional.get().getId());
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setTitle("Notification Title");
         notification.setDescription("Notification Description");
         notification.setSeen(false);
+        notificationRepository.save(notification);
+        notificationRepository.save(notification);
         notificationRepository.save(notification);
     }
 }
