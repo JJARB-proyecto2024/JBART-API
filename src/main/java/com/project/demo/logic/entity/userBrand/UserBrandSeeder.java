@@ -33,7 +33,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        this.createUserBuyer();
+        this.createUserBrand();
         /*this.createUserBuyer2();
         this.createUserBuyer3();
         this.createUserBuyer4();
@@ -49,18 +49,19 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         return ApplicationListener.super.supportsAsyncExecution();
     }
 
-    private void createUserBuyer() {
+    private void createUserBrand() {
         UserBrand userBrand = new UserBrand();
         userBrand.setLegalId(Long.parseLong("3101123456"));
         userBrand.setLogoType("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif");
+        userBrand.setLegalDocuments("https://res.cloudinary.com/dbd6uaiux/image/upload/v1722045648/Tarea1_BraylieUre%C3%B1a_h2nush.pdf");
         userBrand.setBrandName("Lorem Ipsum");
         userBrand.setLegalRepresentativeName("Pedro Pascal");
         userBrand.setMainLocationAddress("San Rafael Arriba, Desamparados");
         userBrand.setBrandCategories("Camisas, Pantalonetas");
         userBrand.setEmail("user.brand@gmail.com");
         userBrand.setPassword("userbrand123");
-        userBrand.setRate(2);
-        userBrand.setStatus("Activo");
+        userBrand.setRate(0);
+        userBrand.setStatus("Inactivo");
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
         Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
 
@@ -71,6 +72,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         var user = new UserBrand();
         user.setLegalId(userBrand.getLegalId());
         user.setLogoType(userBrand.getLogoType());
+        user.setLegalDocuments(userBrand.getLegalDocuments());
         user.setBrandName(userBrand.getBrandName());
         user.setLegalRepresentativeName(userBrand.getLegalRepresentativeName());
         user.setMainLocationAddress(userBrand.getMainLocationAddress());
