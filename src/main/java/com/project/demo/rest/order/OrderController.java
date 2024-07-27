@@ -5,6 +5,7 @@ import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.user.User;
+import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,16 +99,16 @@ public class OrderController {
     }
 
     @GetMapping("/brand")
-    @PreAuthorize("hasAnyRole('USER_BRAND')")
+    @PreAuthorize("hasAnyRole('USER_BRAND', 'SUPER_ADMIN')")
     public List<Order> getOrdersForBrand() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
+        UserBrand currentUser = (UserBrand) authentication.getPrincipal();
         return orderRepository.findByBrandId(currentUser.getId());
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER')")
-    public List<Order> getOrdersForUser() {
+    @PreAuthorize("hasAnyRole('USER', 'SUPER_ADMIN')")
+    public List<Order> getOrdersForUser() { //para el usuario loggeado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
         return orderRepository.findByUserId(currentUser.getId());
