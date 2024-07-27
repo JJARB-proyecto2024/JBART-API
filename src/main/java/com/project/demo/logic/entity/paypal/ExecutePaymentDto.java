@@ -1,4 +1,4 @@
-package com.project.demo.rest.paypal;
+package com.project.demo.logic.entity.paypal;
 
 public class ExecutePaymentDto {
     private String paymentId;
