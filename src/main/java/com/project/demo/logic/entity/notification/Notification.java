@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.notification;
 
+import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
@@ -28,6 +29,9 @@ public class Notification {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @Column(name = "redirect_link", nullable = false)
+    String redirectLink;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -78,6 +82,14 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getRedirectLink() {
+        return redirectLink;
+    }
+
+    public void setRedirectLink(String redirectLink) {
+        this.redirectLink = redirectLink;
     }
 
     public Date getCreatedAt() {

@@ -54,6 +54,7 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
         notification.setTitle("Notification Title");
         notification.setDescription("Notification Description");
         notification.setSeen(false);
+        notification.setRedirectLink("/products");
         notificationRepository.save(notification);
         notificationRepository.save(notification);
         notificationRepository.save(notification);
