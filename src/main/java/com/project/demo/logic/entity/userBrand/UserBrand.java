@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.userBrand;
 
+import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
