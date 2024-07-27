@@ -12,4 +12,12 @@ public interface UserBrandRepository extends JpaRepository<UserBrand, Long> {
     @Query("SELECT u FROM UserBrand u WHERE u.brandName = ?1")
     Optional<UserBrand> findByName(String name);
     Optional<UserBrand> findByEmail(String email);
+    @Query(
+            "SELECT u FROM UserBrand u WHERE u.status = 'Inactivo'"
+    )
+    List<UserBrand> findUserBrandByStatusInactive ();
+    @Query(
+            "SELECT u FROM UserBrand u WHERE u.status = 'Activo'"
+    )
+    List<UserBrand> findUserBrandByStatusActive ();
 }
