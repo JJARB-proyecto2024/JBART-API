@@ -1,6 +1,7 @@
 package com.project.demo.logic.entity.product;
 
 import com.project.demo.logic.entity.category.Category;
+import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,9 @@ public class Product {
     private Integer rate;
     @Column(name = "status",nullable = false)
     private String status;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<RateProduct> rateProduct;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
