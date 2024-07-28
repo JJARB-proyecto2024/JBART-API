@@ -34,10 +34,16 @@ public class UserBrandRestController {
     @Autowired
     private EmailService emailService;
 
-    @GetMapping
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
-    public List<UserBrand> getAllUsers() {
-        return UserBrandRepository.findAll();
+    public List<UserBrand> getAllBrandActive() {
+        return UserBrandRepository.findUserBrandByStatusActive();
+    }
+
+    @GetMapping("/newRequests")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    public  List<UserBrand> getNewBrandByRequest() {
+        return UserBrandRepository.findUserBrandByStatusInactive();
     }
 
     @PostMapping
