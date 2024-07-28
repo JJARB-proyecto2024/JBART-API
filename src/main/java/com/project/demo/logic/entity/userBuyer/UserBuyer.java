@@ -1,6 +1,8 @@
 package com.project.demo.logic.entity.userBuyer;
 
+import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
+import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,6 +40,8 @@ public class UserBuyer extends User {
 
     @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
     private List<RateBrand> rateBrand;
+    @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
+    private List<RateProduct> rateProduct;
 
     public UserBuyer() {
     }

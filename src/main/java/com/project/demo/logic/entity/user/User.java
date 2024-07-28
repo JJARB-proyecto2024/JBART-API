@@ -1,5 +1,7 @@
 package com.project.demo.logic.entity.user;
 
+import com.project.demo.logic.entity.notification.Notification;
+import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.rol.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,7 +49,8 @@ public class User implements UserDetails {
     private String name;
     private String lastname;
 
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Notification> notifications;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

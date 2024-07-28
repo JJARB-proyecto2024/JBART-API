@@ -3,7 +3,6 @@ package com.project.demo.logic.entity.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import com.project.demo.rest.paypal.ItemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,18 +65,15 @@ public class PaypalService {
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(baseUrl + "/cancel");
-        redirectUrls.setReturnUrl(baseUrl + "/execute");
+        redirectUrls.setCancelUrl(baseUrl + "/");
+        redirectUrls.setReturnUrl(baseUrl + "/executePayment");
 
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);
     }
 
-    public  Payment excecutePayment(
-            String paymentId,
-            String payerId
-    ) throws PayPalRESTException {
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
