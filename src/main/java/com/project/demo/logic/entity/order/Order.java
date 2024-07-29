@@ -24,6 +24,9 @@ public class Order {
     private Double shippingCost;
     private Double total;
     private String status;
+    private String deliveryLocation;
+    private String currentLocation;
+
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -95,6 +98,22 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDeliveryLocation() {
+        return deliveryLocation;
+    }
+
+    public void setDeliveryLocation(String deliveryLocation) {
+        this.deliveryLocation = deliveryLocation;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
     }
 
     public Date getCreatedAt() {return createdAt;}
