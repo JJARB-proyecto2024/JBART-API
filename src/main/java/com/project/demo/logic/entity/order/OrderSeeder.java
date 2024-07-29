@@ -88,7 +88,8 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setShippingCost(5.00);
         order.setTotal(order.getSubTotal() + order.getShippingCost());
         order.setStatus("Pendiente");
-
+        order.setDeliveryLocation("San Rafael Arriba, Desamparados");
+        order.setCurrentLocation("San Rafael Abajo, Desamparados");
         orderRepository.save(order);
         System.out.println("Orden creada: " + order);
     }*/
