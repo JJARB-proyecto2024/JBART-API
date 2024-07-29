@@ -19,8 +19,8 @@ import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
-import com.project.demo.rest.paypal.ExecutePaymentDto;
-import com.project.demo.rest.paypal.ItemDto;
+import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
+import com.project.demo.logic.entity.paypal.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -224,31 +222,38 @@ public class AuthRestController {
     }
 
     @PostMapping("/createPayment")
-    public ResponseEntity<String> createPayment(
-            @RequestBody List<ItemDto> items,
-            @RequestHeader("host") String host) {
+    public ResponseEntity<Map<String, String>> createPayment(@RequestBody List<ItemDto> items, @RequestHeader("host") String host) {
         try {
-            String baseUrl = "http://" + host;
-            Payment payment = paypalService.createPayment(items, baseUrl);
-            return new ResponseEntity<>(payment.toString(), HttpStatus.CREATED);
+            Payment payment = paypalService.createPayment(items, "http://" + host);
+            String approvalLink = payment.getLinks().stream()
+                    .filter(link -> "approval_url".equals(link.getRel()))
+                    .findFirst()
+                    .map(link -> link.getHref())
+                    .orElseThrow(() -> new RuntimeException("Approval URL not found"));
+
+            Map<String, String> response = new HashMap<>();
+            response.put("id", payment.getId());
+            response.put("token", approvalLink.substring(approvalLink.indexOf("token=") + 6));
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (PayPalRESTException e) {
-            // Log error details and return a more informative message
             e.printStackTrace();
-            return new ResponseEntity<>("Error creating payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Collections.singletonMap("error", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
 
     @PostMapping("/executePayment")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Payment> executePayment(@RequestBody ExecutePaymentDto dto) {
+    public ResponseEntity<?> executePayment(@RequestBody ExecutePaymentDto dto) {
         try {
-            Payment payment = paypalService.excecutePayment(dto.getPaymentId(), dto.getPayerId());
-            return new ResponseEntity<>(payment, HttpStatus.OK);
+            return new ResponseEntity<>(paypalService.executePayment(dto.getPaymentId(), dto.getPayerId()), HttpStatus.OK);
         } catch (PayPalRESTException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error executing payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }
