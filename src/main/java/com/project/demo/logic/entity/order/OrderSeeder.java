@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -29,6 +32,40 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         this.createOrders();
     }
 
+    private void createOrders() {
+        //estados de la orden
+        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
+
+
+        UserBuyer userBuyer = userBuyerRepository.findById(2L).orElse(null);
+        if (userBuyer == null) {
+            System.out.println("UserBuyer no encontrado");
+            return; // Usuario comprador no encontrado
+        }
+
+        Product product = productRepository.findById(1L).orElse(null);
+        if (product == null) {
+            System.out.println("Producto no encontrado");
+            return; // Producto no encontrado
+        }
+
+        // Crear  orden
+        for (String status : orderStatuses) {
+            Order order = new Order();
+            order.setUserBuyer(userBuyer);
+            order.setProduct(product);
+            order.setQuantity(2);
+            order.setSubTotal(product.getPrice() * 2);
+            order.setShippingCost(5.00);
+            order.setTotal(order.getSubTotal() + order.getShippingCost());
+            order.setStatus(status);
+
+            orderRepository.save(order);
+            System.out.println("Orden creada con ID: " + order.getId() + ", Estado: " + order.getStatus());
+        }
+    }
+
+    /*
     private void createOrders() {
         Order order = new Order();
 
@@ -54,5 +91,5 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
         orderRepository.save(order);
         System.out.println("Orden creada: " + order);
-    }
+    }*/
 }

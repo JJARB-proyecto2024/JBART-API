@@ -52,7 +52,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
     public Order updateOrder(@PathVariable Long id, @RequestBody Order order) {
         return orderRepository.findById(id)
                 .map(existingOrder -> {
@@ -87,6 +87,17 @@ public class OrderController {
                     order.setId(id);
                     return orderRepository.save(order);
                 });
+    }
+
+    @PutMapping("/upStatus/{id}")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
+    public Order updateOrderStatus(@PathVariable Long id, @RequestBody Order updatedOrder) {
+        return orderRepository.findById(id)
+                .map(existingOrder -> {
+                    existingOrder.setStatus(updatedOrder.getStatus());
+                    return orderRepository.save(existingOrder);
+                })
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
     }
 
     @DeleteMapping("/{id}")
