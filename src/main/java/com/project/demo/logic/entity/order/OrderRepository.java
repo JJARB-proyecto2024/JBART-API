@@ -10,10 +10,10 @@ import java.util.Objects;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query("SELECT o FROM Order o WHERE o.product.userBrand.id = ?1")
+    @Query("SELECT o FROM Order o WHERE o.product.userBrand.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByBrandId(Long userBrandId);
 
-    @Query("SELECT o FROM Order o WHERE o.userBuyer.id = ?1")
+    @Query("SELECT o FROM Order o WHERE o.userBuyer.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByUserId(Long userId);
 
     @Query("SELECT p.name AS productName, " +

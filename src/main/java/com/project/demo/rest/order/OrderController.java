@@ -111,7 +111,7 @@ public class OrderController {
 
     @GetMapping("/brand")
     @PreAuthorize("hasAnyRole('USER_BRAND', 'SUPER_ADMIN')")
-    public List<Order> getOrdersForBrand() {
+    public List<Order> getOrdersForBrand() { 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserBrand currentUser = (UserBrand) authentication.getPrincipal();
         return orderRepository.findByBrandId(currentUser.getId());
