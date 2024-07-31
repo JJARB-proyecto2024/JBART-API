@@ -11,6 +11,8 @@ import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.paypal.PaypalService;
+import com.project.demo.logic.entity.product.Product;
+import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -18,12 +20,14 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
 import com.project.demo.logic.entity.paypal.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +52,9 @@ public class AuthRestController {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserBrandRepository userBrandRepository;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -55,6 +62,9 @@ public class AuthRestController {
 
     @Autowired
     private PaypalService paypalService;
+
+    @Autowired
+    private ProductRepository productRepository;
     
 
     private final AuthenticationService authenticationService;
@@ -172,6 +182,23 @@ public class AuthRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
+        boolean result = validateOtp(email, otpCode);
+
+        if (result) {
+                // Actualizar la contraseña del usuario
+                User user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            } else {
+
+                return false;
+
+        }
+    }
+
+    public boolean validateOtp(String email, String otpCode) {
         Optional<Otp> otpOptional = otpRepository.findByOtpCodeAndEmail(otpCode, email);
 
         if (otpOptional.isPresent()) {
@@ -181,19 +208,14 @@ public class AuthRestController {
             if (otp.getExpiryTime().isAfter(now)) {
                 // OTP válido y no expirado, procede con la validación
                 otpRepository.delete(otp);
-                // Actualizar la contraseña del usuario
-                User user = userRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
-                user.setPassword(passwordEncoder.encode(newPassword));
-                userRepository.save(user);
                 return true;
             } else {
-                // OTP expirado, eliminarlo de la base de datos
+                // OTP expirado, eliminarlo de la base de datos (opcional)
                 otpRepository.delete(otp);
-                System.out.println("El código OTP ha expirado.");
                 return false;
             }
         }
+
         // OTP no encontrado
         return false;
     }
@@ -210,6 +232,14 @@ public class AuthRestController {
         } catch (IOException e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
+    }
+
+    @Scheduled(fixedRate = 60000) // Ejecutar cada 1 minuto (ajustar según necesidad)
+    public void cleanExpiredOtps() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);
+        otpRepository.deleteAll(expiredOtps);
+        System.out.println("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
     }
 
     // Método para crear detalles de correo electrónico
@@ -255,5 +285,16 @@ public class AuthRestController {
         }
     }
 
+    @GetMapping("/brands")
+    @PreAuthorize("permitAll")
+    public List<UserBrand> getAllBrandActive() {
+        return userBrandRepository.findUserBrandByStatusActive();
+    }
+
+    @GetMapping("/products")
+    @PreAuthorize("permitAll")
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
 }

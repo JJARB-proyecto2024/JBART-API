@@ -13,4 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT u FROM Product u WHERE u.name = ?1")
     Optional<Product> findByName(String name);
+
+    List<Product> findProductsByCategoryId(Long categoryId);
+
+    List<Product> findProductsByUserBrandId(Long userBrandId);
 }
