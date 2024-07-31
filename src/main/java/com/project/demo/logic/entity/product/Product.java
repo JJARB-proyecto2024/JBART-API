@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.product;
 
+import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBrand.UserBrand;
@@ -31,6 +32,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<RateProduct> rateProduct;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Cart> carts;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
