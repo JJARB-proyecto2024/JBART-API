@@ -33,6 +33,18 @@ public class ProductController {
         return productRepository.findAll();
     }
 
+    @GetMapping("/brand/{id}")
+    @PreAuthorize("hasAnyRole('USER_BRAND', 'SUPER_ADMIN', 'USER')")
+    public List<Product> getByBrand(@PathVariable Long id) {
+        return productRepository.findProductsByUserBrandId(id);
+    }
+
+    @GetMapping("/category/{id}")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
+    public List<Product> getByCategory(@PathVariable Long id) {
+        return productRepository.findProductsByCategoryId(id);
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN')")
     public Product addProduct(@RequestBody Product product) {
