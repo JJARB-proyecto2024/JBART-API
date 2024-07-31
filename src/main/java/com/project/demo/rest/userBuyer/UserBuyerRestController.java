@@ -79,8 +79,6 @@ public class UserBuyerRestController {
                     existingUser.setGenre(user.getGenre());
                     existingUser.setDeliveryLocation(user.getDeliveryLocation());
                     existingUser.setPhoneNumber(user.getPhoneNumber());
-                    existingUser.setEmail(user.getEmail());
-                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
                     return UserBuyerRepository.save(existingUser);
                 })
                 .orElseGet(() -> {
