@@ -3,6 +3,12 @@ package com.project.demo.logic.entity.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import com.project.demo.logic.entity.order.Order;
+import com.project.demo.logic.entity.order.OrderRepository;
+import com.project.demo.logic.entity.product.Product;
+import com.project.demo.logic.entity.product.ProductRepository;
+import com.project.demo.logic.entity.userBuyer.UserBuyer;
+import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +23,14 @@ public class PaypalService {
 
     @Autowired
     private APIContext apiContext;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private UserBuyerRepository userBuyerRepository;
 
-    public Payment createPayment(List<ItemDto> items, String baseUrl) throws PayPalRESTException {
+    public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId) throws PayPalRESTException {
         double subtotal = 0;
 
         ItemList itemList = new ItemList();
@@ -70,7 +82,36 @@ public class PaypalService {
 
         payment.setRedirectUrls(redirectUrls);
 
-        return payment.create(apiContext);
+        Payment createdPayment = payment.create(apiContext);
+
+        UserBuyer userBuyer = userBuyerRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("UserBuyer not found"));
+
+        createOrder(items, userBuyer, subtotal, shipping, tax, shipping + tax + subtotal, "Pending", userBuyer.getDeliveryLocation());
+
+        return createdPayment;
+    }
+
+    private void createOrder(List<ItemDto> items, UserBuyer userBuyer, double subtotal, double shipping, double tax, double total, String status, String deliveryLocation) {
+        for (ItemDto itemDto : items) {
+            Order order = new Order();
+            order.setUserBuyer(userBuyer);
+            order.setProduct(getProductFromItemDto(itemDto));
+            order.setQuantity(itemDto.getQuantity());
+            order.setSubTotal(subtotal);
+            order.setShippingCost(shipping);
+            order.setTotal(total);
+            order.setStatus(status);
+            order.setDeliveryLocation(deliveryLocation);
+            order.setCurrentLocation("Order Created");
+
+            orderRepository.save(order);
+        }
+    }
+
+    private Product getProductFromItemDto(ItemDto itemDto) {
+        return productRepository.findByName(itemDto.getName())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
