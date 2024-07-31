@@ -68,6 +68,8 @@ public class AuthRestController {
 
     @Autowired
     private UserBuyerRepository userBuyerRepository;
+
+    @Autowired
     private ProductRepository productRepository;
     
 
