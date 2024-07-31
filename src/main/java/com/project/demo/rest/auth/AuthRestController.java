@@ -21,10 +21,13 @@ import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
 import com.project.demo.logic.entity.paypal.ItemDto;
+import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,6 +58,9 @@ public class AuthRestController {
 
     @Autowired
     private PaypalService paypalService;
+
+    @Autowired
+    private UserBuyerRepository userBuyerRepository;
     
 
     private final AuthenticationService authenticationService;
@@ -222,9 +228,13 @@ public class AuthRestController {
     }
 
     @PostMapping("/createPayment")
-    public ResponseEntity<Map<String, String>> createPayment(@RequestBody List<ItemDto> items, @RequestHeader("host") String host) {
+    public ResponseEntity<?> createPayment(@RequestBody List<ItemDto> items, @RequestHeader("host") String host) {
         try {
-            Payment payment = paypalService.createPayment(items, "http://" + host);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
+            Long userId = currentUser.getId();
+
+            Payment payment = paypalService.createPayment(items, "http://" + host, userId);
             String approvalLink = payment.getLinks().stream()
                     .filter(link -> "approval_url".equals(link.getRel()))
                     .findFirst()
