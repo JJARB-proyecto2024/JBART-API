@@ -27,6 +27,7 @@ import com.project.demo.logic.entity.paypal.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -181,6 +182,23 @@ public class AuthRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
+        boolean result = validateOtp(email, otpCode);
+
+        if (result) {
+                // Actualizar la contraseña del usuario
+                User user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            } else {
+
+                return false;
+
+        }
+    }
+
+    public boolean validateOtp(String email, String otpCode) {
         Optional<Otp> otpOptional = otpRepository.findByOtpCodeAndEmail(otpCode, email);
 
         if (otpOptional.isPresent()) {
@@ -190,19 +208,14 @@ public class AuthRestController {
             if (otp.getExpiryTime().isAfter(now)) {
                 // OTP válido y no expirado, procede con la validación
                 otpRepository.delete(otp);
-                // Actualizar la contraseña del usuario
-                User user = userRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
-                user.setPassword(passwordEncoder.encode(newPassword));
-                userRepository.save(user);
                 return true;
             } else {
-                // OTP expirado, eliminarlo de la base de datos
+                // OTP expirado, eliminarlo de la base de datos (opcional)
                 otpRepository.delete(otp);
-                System.out.println("El código OTP ha expirado.");
                 return false;
             }
         }
+
         // OTP no encontrado
         return false;
     }
@@ -219,6 +232,14 @@ public class AuthRestController {
         } catch (IOException e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
+    }
+
+    @Scheduled(fixedRate = 60000) // Ejecutar cada 1 minuto (ajustar según necesidad)
+    public void cleanExpiredOtps() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);
+        otpRepository.deleteAll(expiredOtps);
+        System.out.println("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
     }
 
     // Método para crear detalles de correo electrónico
