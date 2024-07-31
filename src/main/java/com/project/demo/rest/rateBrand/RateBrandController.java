@@ -4,6 +4,7 @@ import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.rateBrand.RateBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.userBrand.UserBrandRestController;
 import com.project.demo.rest.userBuyer.UserBuyerRestController;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
@@ -35,6 +36,8 @@ public class RateBrandController {
 
     @Autowired
     private UserBuyerRestController userBuyerRestController;
+
+    private UserBrandRestController userBrandRestController;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -68,13 +71,28 @@ public class RateBrandController {
 
         if (existingRating.isPresent()) {
             throw new IllegalArgumentException("User has already rated this brand.");
-        }else {
-
+        } else {
             rateBrand.setUserBrand(userBrand);
             rateBrand.setUserBuyer(userBuyer);
 
-            return rateBrandRepository.save(rateBrand);
+            RateBrand savedRateBrand = rateBrandRepository.save(rateBrand);
+
+            // Calcular la calificación promedio y actualizar el UserBrand
+            Integer averageRating = calculateAverageRate(brandId);
+            userBrand.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+            userBrandRepository.save(userBrand);
+
+            return savedRateBrand;
         }
+    }
+
+    private Integer calculateAverageRate(Long brandId) {
+        List<RateBrand> rates = rateBrandRepository.findByUserBrandId(brandId);
+        if (rates.isEmpty()) {
+            return 0;
+        }
+        int sum = rates.stream().mapToInt(RateBrand::getRate).sum();
+        return sum / rates.size(); // División entera
     }
 
     @GetMapping("/{id}")

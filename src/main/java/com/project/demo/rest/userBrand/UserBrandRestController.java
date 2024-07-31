@@ -89,6 +89,22 @@ public class UserBrandRestController {
                 });
     }
 
+    @PutMapping("/upRate/{id}")
+    public UserBrand updateRate(@PathVariable Long id, @RequestBody UserBrand user) {
+        System.out.println(id);
+        UserBrand retrievedUser = getUserById(id);
+        String name = retrievedUser.getBrandName();
+        return UserBrandRepository.findById(id)
+                .map(existingUser -> {
+                    existingUser.setRate(user.getRate());
+                    return UserBrandRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    user.setId(id);
+                    return UserBrandRepository.save(user);
+                });
+    }
+
     @PutMapping("/upStatus/{id}")
     public UserBrand updateStatus(@PathVariable Long id, @RequestBody UserBrand user) {
         System.out.println(id);
