@@ -11,6 +11,8 @@ import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.paypal.PaypalService;
+import com.project.demo.logic.entity.product.Product;
+import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -18,6 +20,7 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
 import com.project.demo.logic.entity.paypal.ItemDto;
@@ -48,6 +51,9 @@ public class AuthRestController {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserBrandRepository userBrandRepository;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -55,6 +61,9 @@ public class AuthRestController {
 
     @Autowired
     private PaypalService paypalService;
+
+    @Autowired
+    private ProductRepository productRepository;
     
 
     private final AuthenticationService authenticationService;
@@ -255,5 +264,16 @@ public class AuthRestController {
         }
     }
 
+    @GetMapping("/brands")
+    @PreAuthorize("permitAll")
+    public List<UserBrand> getAllBrandActive() {
+        return userBrandRepository.findUserBrandByStatusActive();
+    }
+
+    @GetMapping("/products")
+    @PreAuthorize("permitAll")
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
 }
