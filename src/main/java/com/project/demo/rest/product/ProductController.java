@@ -5,12 +5,15 @@ import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.user.User;
+import com.project.demo.logic.entity.userBrand.UserBrand;
+import com.project.demo.rest.userBrand.UserBrandRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -25,12 +28,23 @@ public class ProductController {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private UserBrandRestController userBrandRestController;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    @GetMapping("/brands")
+    @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
+    public List<Product> getAll() {
+        UserBrand userBrand = userBrandRestController.authenticatedUser();
+        Long brandId = userBrand.getId();
+        return productRepository.findProductsByUserBrandId(brandId);
     }
 
     @GetMapping("/brand/{id}")
