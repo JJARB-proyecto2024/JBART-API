@@ -87,7 +87,7 @@ public class PaypalService {
         UserBuyer userBuyer = userBuyerRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("UserBuyer not found"));
 
-        createOrder(items, userBuyer, subtotal, shipping, tax, shipping + tax + subtotal, "Pending", "Not Delivered");
+        createOrder(items, userBuyer, subtotal, shipping, tax, shipping + tax + subtotal, "Pending", userBuyer.getDeliveryLocation());
 
         return createdPayment;
     }
