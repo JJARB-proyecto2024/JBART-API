@@ -50,7 +50,7 @@ public class NotificationController {
                 });
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public void deleteNotification(@PathVariable Long id) {
         notificationRepository.deleteById(id);
