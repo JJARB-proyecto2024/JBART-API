@@ -55,7 +55,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         userBrand.setEmail("user.brand@gmail.com");
         userBrand.setPassword("userbrand123");
         userBrand.setRate(0);
-        userBrand.setStatus("Inactivo");
+        userBrand.setStatus("Activo");
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
         Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
 
