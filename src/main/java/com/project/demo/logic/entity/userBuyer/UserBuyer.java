@@ -3,6 +3,7 @@ package com.project.demo.logic.entity.userBuyer;
 import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
+import com.project.demo.logic.entity.rateOrder.RateOrder;
 import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
@@ -44,6 +45,9 @@ public class UserBuyer extends User {
 
     @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
     private List<RateProduct> rateProduct;
+
+    @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
+    private List<RateOrder> rateOrder;
 
     @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
     private List<Cart> carts;

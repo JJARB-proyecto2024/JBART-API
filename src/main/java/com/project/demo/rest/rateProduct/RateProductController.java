@@ -72,13 +72,28 @@ public class RateProductController {
 
         if (existingRating.isPresent()) {
             throw new IllegalArgumentException("User has already rated this brand.");
-        }else {
-
+        } else {
             rateProduct.setProduct(product);
             rateProduct.setUserBuyer(userBuyer);
 
-            return rateProductRepository.save(rateProduct);
+            RateProduct savedRateBrand = rateProductRepository.save(rateProduct);
+
+            // Calcular la calificación promedio y actualizar el UserBrand
+            Integer averageRating = calculateAverageRate(productId);
+            product.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+            productRepository.save(product);
+
+            return savedRateBrand;
         }
+    }
+
+    private Integer calculateAverageRate(Long productId) {
+        List<RateProduct> rates = rateProductRepository.findByProductId(productId);
+        if (rates.isEmpty()) {
+            return 0;
+        }
+        int sum = rates.stream().mapToInt(RateProduct::getRate).sum();
+        return sum / rates.size(); // División entera
     }
 
     @GetMapping("/{id}")
