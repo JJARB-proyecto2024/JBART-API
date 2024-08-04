@@ -26,4 +26,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         "ORDER BY totalQuantitySold DESC")
     List<Object[]> getMostSoldProducts(@Param("userBrandId") Long userBrandId);
 
+    @Query("SELECT p.userBrand.id AS userBrandId, " +
+            "p.userBrand.brandName AS brandName, " +
+            "SUM(o.quantity * p.price) AS totalEarnings " +
+            "FROM Order o " +
+            "JOIN o.product p " +
+            "GROUP BY p.userBrand.id, p.userBrand.brandName " +
+            "ORDER BY totalEarnings DESC")
+    List<Object[]> getTotalEarningsByBrand();
+
+
+
 }
