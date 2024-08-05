@@ -94,14 +94,13 @@ public class UserBuyerRestController {
 
     @PutMapping("/deactivate")
     public ResponseEntity<?> deactivateUser(@RequestBody UserBuyer user) {
-
         Optional<UserBuyer> optionalUser = UserBuyerRepository.findById(user.getId());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
         }
 
         UserBuyer userResult = optionalUser.get();
-        if (userResult.getPassword().equals(user.getPassword()) ) {
+        if (!passwordEncoder.matches(user.getPassword(), userResult.getPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Contraseña incorrecta.");
         }
 
@@ -110,6 +109,7 @@ public class UserBuyerRestController {
 
         return ResponseEntity.ok("Cuenta desactivada con éxito.");
     }
+
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
