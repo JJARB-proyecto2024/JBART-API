@@ -30,7 +30,7 @@ public class PaypalService {
     @Autowired
     private UserBuyerRepository userBuyerRepository;
 
-    public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId) throws PayPalRESTException {
+    public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId, String currency) throws PayPalRESTException {
         double subtotal = 0;
 
         ItemList itemList = new ItemList();
@@ -40,7 +40,7 @@ public class PaypalService {
             subtotal += itemDto.getPrice() * itemDto.getQuantity();
             Item item = new Item();
             item.setName(itemDto.getName());
-            item.setCurrency("USD");
+            item.setCurrency(currency);
             item.setPrice(String.format(Locale.US, "%.2f", itemDto.getPrice()));
             item.setQuantity(String.valueOf(itemDto.getQuantity()));
             itemListItems.add(item);
@@ -52,7 +52,7 @@ public class PaypalService {
         double tax = 0;
 
         Amount amount = new Amount();
-        amount.setCurrency("USD");
+        amount.setCurrency(currency);
         Details details = new Details();
         details.setShipping(String.format(Locale.US, "%.2f", shipping));
         details.setTax(String.format(Locale.US, "%.2f", tax));
