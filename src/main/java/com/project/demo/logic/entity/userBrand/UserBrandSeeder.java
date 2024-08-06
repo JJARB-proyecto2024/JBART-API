@@ -15,137 +15,56 @@ import java.util.Optional;
 public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEvent> {
     private final RoleRepository roleRepository;
     private final UserBrandRepository userBrandRepository;
-
     private final PasswordEncoder passwordEncoder;
-    private final CategoryRepository categoryRepository;
-
 
     public UserBrandSeeder(
             RoleRepository roleRepository,
             UserBrandRepository userBrandRepository,
-            PasswordEncoder passwordEncoder,
-            CategoryRepository categoryRepository) {
+            PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userBrandRepository = userBrandRepository;
         this.passwordEncoder = passwordEncoder;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        this.createUserBrand();
-        this.createUserBrand2();
-        this.createUserBrand3();
+        createUserBrand("3101123456", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif",
+                "https://res.cloudinary.com/dbd6uaiux/image/upload/v1722045648/Tarea1_BraylieUre%C3%B1a_h2nush.pdf", "Lorem Ipsum", "Pedro Pascal",
+                "San Rafael Arriba, Desamparados", "Camisas, Pantalonetas", "user.brand@gmail.com", "userbrand123", 0, "Activo");
+
+        createUserBrand("987456321", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif",
+                null, "Adidas", "Pedro Pascal", "San Rafael Arriba, Desamparados", "Sweaters, Pantalones", "adidas@gmail.com",
+                "adidas123", 4, "Activo");
+
+        createUserBrand("123654789", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif",
+                null, "Nike", "Pedro Pascal", "San Rafael Arriba, Desamparados", "Camisas, Calzado", "nike@gmail.com",
+                "nike123", 3, "Activo");
     }
 
-    @Override
-    public boolean supportsAsyncExecution() {
-        return ApplicationListener.super.supportsAsyncExecution();
-    }
-
-    private void createUserBrand() {
-        UserBrand userBrand = new UserBrand();
-        userBrand.setLegalId(Long.parseLong("3101123456"));
-        userBrand.setLogoType("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif");
-        userBrand.setLegalDocuments("https://res.cloudinary.com/dbd6uaiux/image/upload/v1722045648/Tarea1_BraylieUre%C3%B1a_h2nush.pdf");
-        userBrand.setBrandName("Lorem Ipsum");
-        userBrand.setLegalRepresentativeName("Pedro Pascal");
-        userBrand.setMainLocationAddress("San Rafael Arriba, Desamparados");
-        userBrand.setBrandCategories("Camisas, Pantalonetas");
-        userBrand.setEmail("user.brand@gmail.com");
-        userBrand.setPassword("userbrand123");
-        userBrand.setRate(0);
-        userBrand.setStatus("Activo");
+    private void createUserBrand(String legalId, String logoType, String legalDocuments, String brandName,
+                                 String legalRepresentativeName, String mainLocationAddress, String brandCategories,
+                                 String email, String password, int rate, String status) {
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
-        Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
+        Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(email);
 
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
             return;
         }
 
-        var user = new UserBrand();
-        user.setLegalId(userBrand.getLegalId());
-        user.setLogoType(userBrand.getLogoType());
-        user.setLegalDocuments(userBrand.getLegalDocuments());
-        user.setBrandName(userBrand.getBrandName());
-        user.setLegalRepresentativeName(userBrand.getLegalRepresentativeName());
-        user.setMainLocationAddress(userBrand.getMainLocationAddress());
-        user.setBrandCategories(userBrand.getBrandCategories());
-        user.setEmail(userBrand.getEmail());
-        user.setPassword(passwordEncoder.encode(userBrand.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBrand.getStatus());
-        user.setRate(userBrand.getRate());
-        userBrandRepository.save(user);
-    }
-
-    private void createUserBrand2() {
         UserBrand userBrand = new UserBrand();
-        userBrand.setLegalId(Long.parseLong("987456321"));
-        userBrand.setLogoType("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif");
-        userBrand.setBrandName("Adidas");
-        userBrand.setLegalRepresentativeName("Pedro Pascal");
-        userBrand.setMainLocationAddress("San Rafael Arriba, Desamparados");
-        userBrand.setBrandCategories("Sweaters, Pantalones");
-        userBrand.setEmail("adidas@gmail.com");
-        userBrand.setPassword("adidas123");
-        userBrand.setRate(4);
-        userBrand.setStatus("Activo");
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
-        Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
+        userBrand.setLegalId(Long.parseLong(legalId));
+        userBrand.setLogoType(logoType);
+        userBrand.setLegalDocuments(legalDocuments);
+        userBrand.setBrandName(brandName);
+        userBrand.setLegalRepresentativeName(legalRepresentativeName);
+        userBrand.setMainLocationAddress(mainLocationAddress);
+        userBrand.setBrandCategories(brandCategories);
+        userBrand.setEmail(email);
+        userBrand.setPassword(passwordEncoder.encode(password));
+        userBrand.setRole(optionalRole.get());
+        userBrand.setStatus(status);
+        userBrand.setRate(rate);
 
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
-            return;
-        }
-
-        var user = new UserBrand();
-        user.setLegalId(userBrand.getLegalId());
-        user.setLogoType(userBrand.getLogoType());
-        user.setBrandName(userBrand.getBrandName());
-        user.setLegalRepresentativeName(userBrand.getLegalRepresentativeName());
-        user.setMainLocationAddress(userBrand.getMainLocationAddress());
-        user.setBrandCategories(userBrand.getBrandCategories());
-        user.setEmail(userBrand.getEmail());
-        user.setPassword(passwordEncoder.encode(userBrand.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBrand.getStatus());
-        user.setRate(userBrand.getRate());
-        userBrandRepository.save(user);
+        userBrandRepository.save(userBrand);
     }
-
-    private void createUserBrand3() {
-        UserBrand userBrand = new UserBrand();
-        userBrand.setLegalId(Long.parseLong("123654789"));
-        userBrand.setLogoType("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1721022831/logo-compania_125964-228_s1iogw.avif");
-        userBrand.setBrandName("Nike");
-        userBrand.setLegalRepresentativeName("Pedro Pascal");
-        userBrand.setMainLocationAddress("San Rafael Arriba, Desamparados");
-        userBrand.setBrandCategories("Camisas, Calzado");
-        userBrand.setEmail("nike@gmail.com");
-        userBrand.setPassword("nike123");
-        userBrand.setRate(3);
-        userBrand.setStatus("Activo");
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER_BRAND);
-        Optional<UserBrand> optionalUser = userBrandRepository.findByEmail(userBrand.getEmail());
-
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
-            return;
-        }
-
-        var user = new UserBrand();
-        user.setLegalId(userBrand.getLegalId());
-        user.setLogoType(userBrand.getLogoType());
-        user.setBrandName(userBrand.getBrandName());
-        user.setLegalRepresentativeName(userBrand.getLegalRepresentativeName());
-        user.setMainLocationAddress(userBrand.getMainLocationAddress());
-        user.setBrandCategories(userBrand.getBrandCategories());
-        user.setEmail(userBrand.getEmail());
-        user.setPassword(passwordEncoder.encode(userBrand.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBrand.getStatus());
-        user.setRate(userBrand.getRate());
-        userBrandRepository.save(user);
-    }
-
-
 }

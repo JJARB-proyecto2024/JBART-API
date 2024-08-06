@@ -18,10 +18,8 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final CategoryRepository categoryRepository;
-
 
     public UserBuyerSeeder(
             RoleRepository roleRepository,
@@ -36,110 +34,31 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
-        this.createUserBuyer();
-        this.createUserBuyer2();
-        this.createUserBuyer3();
+        createUserBuyer("User", "Buyer", "user.buyer@gmail.com", "userbuyer123");
+        createUserBuyer("Manuel", "Garro", "mg@gmail.com", "manuel123");
+        createUserBuyer("Ashley", "Graham", "ag@gmail.com", "ashely123");
     }
 
-    private void createUserBuyer() {
-        UserBuyer userBuyer = new UserBuyer();
-
-        userBuyer.setName("User");
-        userBuyer.setLastname("Buyer");
-        userBuyer.setPicture("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        userBuyer.setGenre("Masculino");
-        userBuyer.setDeliveryLocation("San José, San Rafael Arriba de Desamparados");
-        userBuyer.setPhoneNumber("71157914");
-        userBuyer.setEmail("user.buyer@gmail.com");
-        userBuyer.setPassword("userbuyer123");
-        userBuyer.setStatus("Activo");
+    private void createUserBuyer(String name, String lastname, String email, String rawPassword) {
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
-        Optional<User> optionalUser = userRepository.findByEmail(userBuyer.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
             return;
         }
 
-        var user = new UserBuyer();
-        user.setName(userBuyer.getName());
-        user.setLastname(userBuyer.getLastname());
-        user.setPicture(userBuyer.getPicture());
-        user.setGenre(userBuyer.getGenre());
-        user.setDeliveryLocation(userBuyer.getDeliveryLocation());
-        user.setPhoneNumber(userBuyer.getPhoneNumber());
-        user.setEmail(userBuyer.getEmail());
-        user.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBuyer.getStatus());
-        userRepository.save(user);
-    }
-
-    private void createUserBuyer2() {
         UserBuyer userBuyer = new UserBuyer();
-
-        userBuyer.setName("Manuel");
-        userBuyer.setLastname("Garro");
+        userBuyer.setName(name);
+        userBuyer.setLastname(lastname);
         userBuyer.setPicture("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        userBuyer.setGenre("Masculino");
+        userBuyer.setGenre(name.equals("Ashley") ? "Femenino" : "Masculino");
         userBuyer.setDeliveryLocation("San José, San Rafael Arriba de Desamparados");
         userBuyer.setPhoneNumber("71157914");
-        userBuyer.setEmail("mg@gmail.com");
-        userBuyer.setPassword("manuel123");
+        userBuyer.setEmail(email);
+        userBuyer.setPassword(passwordEncoder.encode(rawPassword));
+        userBuyer.setRole(optionalRole.get());
         userBuyer.setStatus("Activo");
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
-        Optional<User> optionalUser = userRepository.findByEmail(userBuyer.getEmail());
 
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
-            return;
-        }
-
-        var user = new UserBuyer();
-        user.setName(userBuyer.getName());
-        user.setLastname(userBuyer.getLastname());
-        user.setPicture(userBuyer.getPicture());
-        user.setGenre(userBuyer.getGenre());
-        user.setDeliveryLocation(userBuyer.getDeliveryLocation());
-        user.setPhoneNumber(userBuyer.getPhoneNumber());
-        user.setEmail(userBuyer.getEmail());
-        user.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBuyer.getStatus());
-        userRepository.save(user);
+        userRepository.save(userBuyer);
     }
-
-    private void createUserBuyer3() {
-        UserBuyer userBuyer = new UserBuyer();
-
-        userBuyer.setName("Ashley");
-        userBuyer.setLastname("Graham");
-        userBuyer.setPicture("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        userBuyer.setGenre("Femenino");
-        userBuyer.setDeliveryLocation("San José, San Rafael Arriba de Desamparados");
-        userBuyer.setPhoneNumber("71157914");
-        userBuyer.setEmail("ag@gmail.com");
-        userBuyer.setPassword("ashely123");
-        userBuyer.setStatus("Activo");
-        Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.USER);
-        Optional<User> optionalUser = userRepository.findByEmail(userBuyer.getEmail());
-
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
-            return;
-        }
-
-        var user = new UserBuyer();
-        user.setName(userBuyer.getName());
-        user.setLastname(userBuyer.getLastname());
-        user.setPicture(userBuyer.getPicture());
-        user.setGenre(userBuyer.getGenre());
-        user.setDeliveryLocation(userBuyer.getDeliveryLocation());
-        user.setPhoneNumber(userBuyer.getPhoneNumber());
-        user.setEmail(userBuyer.getEmail());
-        user.setPassword(passwordEncoder.encode(userBuyer.getPassword()));
-        user.setRole(optionalRole.get());
-        user.setStatus(userBuyer.getStatus());
-        userRepository.save(user);
-    }
-
-
 }
