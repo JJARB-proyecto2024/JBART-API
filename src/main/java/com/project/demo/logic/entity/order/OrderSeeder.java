@@ -63,9 +63,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(1);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(5.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -110,9 +110,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -141,9 +141,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -172,9 +172,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -203,9 +203,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -235,9 +235,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);
@@ -267,9 +267,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
+        order.setSubtotal(product.getPrice() * 2);
         order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus(selectedStatus);
 
         orderRepository.save(order);

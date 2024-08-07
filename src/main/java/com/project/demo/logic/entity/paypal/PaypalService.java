@@ -98,7 +98,7 @@ public class PaypalService {
             order.setUserBuyer(userBuyer);
             order.setProduct(getProductFromItemDto(itemDto));
             order.setQuantity(itemDto.getQuantity());
-            order.setSubTotal(subtotal);
+            order.setSubtotal(subtotal);
             order.setShippingCost(shipping);
             order.setTotal(total);
             order.setStatus(status);
