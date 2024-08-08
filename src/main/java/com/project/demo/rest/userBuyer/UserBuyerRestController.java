@@ -104,7 +104,7 @@ public class UserBuyerRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Contraseña incorrecta.");
         }
 
-        userResult.setStatus("Desactivado");
+        userResult.setStatus("Inactivo");
         UserBuyerRepository.save(userResult);
 
         return ResponseEntity.ok("Cuenta desactivada con éxito.");
