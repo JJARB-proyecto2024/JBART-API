@@ -94,7 +94,6 @@ public class UserBuyerRestController {
 
     @PutMapping("/deactivate")
     public ResponseEntity<?> deactivateUser(@RequestBody UserBuyer user) {
-
         Optional<UserBuyer> optionalUser = UserBuyerRepository.findById(user.getId());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
@@ -110,6 +109,7 @@ public class UserBuyerRestController {
 
         return ResponseEntity.ok("Cuenta desactivada con éxito.");
     }
+
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
