@@ -101,11 +101,11 @@ public class UserBuyerRestController {
         }
 
         UserBuyer userResult = optionalUser.get();
-        if (userResult.getPassword().equals(user.getPassword()) ) {
+        if (!passwordEncoder.matches(user.getPassword(), userResult.getPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Contraseña incorrecta.");
         }
 
-        userResult.setStatus("Desactivado");
+        userResult.setStatus("Inactivo");
         UserBuyerRepository.save(userResult);
 
         return ResponseEntity.ok("Cuenta desactivada con éxito.");
