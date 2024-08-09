@@ -4,7 +4,6 @@ import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.notification.NotificationRepository;
 import com.project.demo.logic.entity.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +15,6 @@ public class NotificationController {
 
     @Autowired
     private NotificationRepository notificationRepository;
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
@@ -34,9 +30,7 @@ public class NotificationController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public Notification addNotification(@RequestBody Notification notification) {
-        Notification savedNotification = notificationRepository.save(notification);
-        messagingTemplate.convertAndSend("/topic/notifications", savedNotification);
-        return savedNotification;
+        return notificationRepository.save(notification);
     }
 
     @GetMapping("/{id}")
