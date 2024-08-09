@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.notification;
 
+import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBrand.UserBrand;
@@ -17,11 +18,9 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "description", nullable = false)
-    private String description;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "notification_template_id", referencedColumnName = "id", nullable = false)
+    private NotificationTemplate notificationTemplate;
 
     @Column(name = "seen", nullable = false)
     private boolean seen;
@@ -29,9 +28,6 @@ public class Notification {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @Column(name = "redirect_link", nullable = false)
-    String redirectLink;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -52,20 +48,12 @@ public class Notification {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public NotificationTemplate getNotificationTemplate() {
+        return notificationTemplate;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setNotificationTemplate(NotificationTemplate notificationTemplate) {
+        this.notificationTemplate = notificationTemplate;
     }
 
     public boolean isSeen() {
@@ -82,14 +70,6 @@ public class Notification {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getRedirectLink() {
-        return redirectLink;
-    }
-
-    public void setRedirectLink(String redirectLink) {
-        this.redirectLink = redirectLink;
     }
 
     public Date getCreatedAt() {

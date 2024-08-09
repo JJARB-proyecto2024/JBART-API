@@ -1,5 +1,7 @@
 package com.project.demo.logic.entity.notification;
 
+import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
+import com.project.demo.logic.entity.notificationTemplate.NotificationTemplateRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
@@ -19,13 +21,15 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
     private final UserRepository userRepository;
     private final UserBuyerRepository userBuyerRepository;
     private final UserBrandRepository userBrandRepository;
+    private final NotificationTemplateRepository notificationTemplateRepository;
 
 
-    public NotificationSeeder(NotificationRepository roleRepository, UserRepository userRepository, UserBuyerRepository userBuyerRepository, UserBrandRepository userBrandRepository) {
+    public NotificationSeeder(NotificationRepository roleRepository, UserRepository userRepository, UserBuyerRepository userBuyerRepository, UserBrandRepository userBrandRepository, NotificationTemplateRepository notificationTemplateRepository) {
         this.notificationRepository = roleRepository;
         this.userRepository = userRepository;
         this.userBuyerRepository = userBuyerRepository;
         this.userBrandRepository = userBrandRepository;
+        this.notificationTemplateRepository = notificationTemplateRepository;
     }
 
     @Override
@@ -40,9 +44,13 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
 
     private void createNotification() {
         Optional<User> userOptional = userRepository.findByEmail("super.admin@gmail.com");
-
+        Optional<NotificationTemplate> notificationTemplateOptional = notificationTemplateRepository.findById(1L);
         if (userOptional.isEmpty()) {
             System.err.println("User not found");
+            return;
+        }
+        if (notificationTemplateOptional.isEmpty()) {
+            System.err.println("Template not found");
             return;
         }
 
@@ -50,11 +58,9 @@ public class NotificationSeeder implements ApplicationListener<ContextRefreshedE
         User user = new User();
         user.setId(userOptional.get().getId());
         Notification notification = new Notification();
+        notification.setNotificationTemplate(notificationTemplateOptional.get());
         notification.setUser(user);
-        notification.setTitle("Notification Title");
-        notification.setDescription("Notification Description");
         notification.setSeen(false);
-        notification.setRedirectLink("/products");
         notificationRepository.save(notification);
         notificationRepository.save(notification);
         notificationRepository.save(notification);
