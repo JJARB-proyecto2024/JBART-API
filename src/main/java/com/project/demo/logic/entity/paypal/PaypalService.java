@@ -7,6 +7,7 @@ import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
+import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import lombok.RequiredArgsConstructor;
@@ -103,7 +104,7 @@ public class PaypalService {
             order.setTotal(total);
             order.setStatus(status);
             order.setDeliveryLocation(deliveryLocation);
-            order.setCurrentLocation("Order Created");
+            order.setCurrentLocation(getProductBrandFromItemDto(itemDto).getMainLocationAddress());
 
             orderRepository.save(order);
         }
@@ -112,6 +113,12 @@ public class PaypalService {
     private Product getProductFromItemDto(ItemDto itemDto) {
         return productRepository.findByName(itemDto.getName())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    private UserBrand getProductBrandFromItemDto(ItemDto itemDto) {
+        return productRepository.findByName(itemDto.getName())
+                .orElseThrow(() -> new RuntimeException("Product not found"))
+                .getUserBrand();
     }
 
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
