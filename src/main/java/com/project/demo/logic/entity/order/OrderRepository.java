@@ -10,6 +10,9 @@ import java.util.Objects;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    @Override
+    @Query("SELECT o FROM Order o ORDER BY o.createdAt DESC")
+    List<Order> findAll();
     @Query("SELECT o FROM Order o WHERE o.product.userBrand.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByBrandId(Long userBrandId);
 
