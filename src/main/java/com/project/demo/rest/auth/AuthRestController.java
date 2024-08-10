@@ -83,19 +83,32 @@ public class AuthRestController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody User user) {
-        User authenticatedUser = authenticationService.authenticate(user);
+        try {
+            User authenticatedUser = authenticationService.authenticate(user);
 
-        String jwtToken = jwtService.generateToken(authenticatedUser);
+            if (!"Activo".equals(authenticatedUser.getStatus())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse("Cuenta inactiva. Por favor, ve al inlace de activación de cuenta."));
+            }
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+            String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        Optional<User> foundedUser = userRepository.findByEmail(user.getEmail());
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(jwtToken);
+            loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
-        foundedUser.ifPresent(loginResponse::setAuthUser);
+            User foundedUser = userRepository.findByEmail(user.getEmail())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            loginResponse.setAuthUser(foundedUser);
 
-        return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(loginResponse);
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(new LoginResponse(e.getReason()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("Error de autenticación. Por favor, verifica tus credenciales."));
+        }
     }
 
     @PostMapping("/signup")
@@ -201,6 +214,25 @@ public class AuthRestController {
 
                 return false;
 
+        }
+    }
+
+    @PostMapping("/resetStatusAccount")
+    @PreAuthorize("permitAll")
+    public boolean resetStatusAccount(@RequestBody ValidateOtpRequest request) {
+        String email = request.getEmail();
+        String otpCode = request.getOtpCode();
+
+        boolean result = validateOtp(email, otpCode);
+
+        if (result) {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado para el email: " + email));
+            user.setStatus("Activo");
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
         }
     }
 
