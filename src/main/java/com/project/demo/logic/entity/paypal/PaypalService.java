@@ -4,6 +4,7 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import com.project.demo.logic.entity.notification.Notification;
+import com.project.demo.logic.entity.notification.NotificationHandler;
 import com.project.demo.logic.entity.notification.NotificationRepository;
 import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
 import com.project.demo.logic.entity.notificationTemplate.NotificationTemplateRepository;
@@ -13,6 +14,7 @@ import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.notification.NotificationController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class PaypalService {
     private NotificationRepository notificationRepository;
     @Autowired
     private NotificationTemplateRepository notificationTemplateRepository;
+
+    @Autowired
+    private NotificationHandler notificationHandler;
 
 
     public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId) throws PayPalRESTException {
@@ -121,6 +126,8 @@ public class PaypalService {
             Optional<NotificationTemplate> buyerNotificationTemplateOptional = this.notificationTemplateRepository.findById(1L);
             buyerNotification.setNotificationTemplate(buyerNotificationTemplateOptional.get());
             notificationRepository.save(buyerNotification);
+            notificationHandler.broadcastNotification(buyerNotification);
+
 
             Notification brandNotification = new Notification();
             brandNotification.setUser(getProductFromItemDto(itemDto).getUserBrand());
@@ -128,6 +135,7 @@ public class PaypalService {
             Optional<NotificationTemplate> brandNotificationTemplateOptional = this.notificationTemplateRepository.findById(5L);
             brandNotification.setNotificationTemplate(brandNotificationTemplateOptional.get());
             notificationRepository.save(brandNotification);
+            notificationHandler.broadcastNotification(brandNotification);
         }
     }
 
