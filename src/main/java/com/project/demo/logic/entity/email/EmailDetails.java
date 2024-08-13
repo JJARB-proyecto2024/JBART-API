@@ -13,6 +13,7 @@ public class EmailDetails {
         setEmailBody(emailBody);
     }
 
+
     public EmailInfo getFromAddress() {
         return fromAddress;
     }
