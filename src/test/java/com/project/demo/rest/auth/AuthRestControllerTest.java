@@ -34,7 +34,7 @@ class AuthRestControllerTest {
     private AuthRestController authRestController;
 
     @Test
-    void authenticate_UserExists_ReturnsLoginResponse() {
+    void authenticate_UserExistsAndActive_ReturnsLoginResponse() {
         // given
         User user = new User();
         user.setEmail("user.buyer@gmail.com");
@@ -42,6 +42,7 @@ class AuthRestControllerTest {
 
         User authenticatedUser = new User();
         authenticatedUser.setEmail("user.buyer@gmail.com");
+        authenticatedUser.setStatus("Activo");
 
         // Mocking the behavior of services and repository
         when(authenticationService.authenticate(user)).thenReturn(authenticatedUser);
@@ -60,27 +61,28 @@ class AuthRestControllerTest {
         assertEquals(authenticatedUser, response.getBody().getAuthUser());
     }
 
+
     @Test
-    void authenticate_UserNotFound_ReturnsLoginResponseWithoutAuthUser() {
+    void authenticate_UserExistsButInactive_ReturnsForbiddenResponse() {
         // given
         User user = new User();
         user.setEmail("user.buyer@gmail.com");
         user.setPassword("newPassword123");
 
+        User authenticatedUser = new User();
+        authenticatedUser.setEmail("user.buyer@gmail.com");
+        authenticatedUser.setStatus("Inactivo");
+
         // Mocking the behavior of services and repository
-        when(authenticationService.authenticate(user)).thenReturn(null);
-        when(jwtService.generateToken(any())).thenReturn("jwtToken");
-        when(jwtService.getExpirationTime()).thenReturn(3600L);
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(authenticationService.authenticate(user)).thenReturn(authenticatedUser);
 
         // when
         ResponseEntity<LoginResponse> response = authRestController.authenticate(user);
 
         // then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("jwtToken", response.getBody().getToken());
-        assertEquals(3600L, response.getBody().getExpiresIn());
-        assertNull(response.getBody().getAuthUser());
+        assertEquals("Cuenta inactiva. Por favor, ve al inlace de activación de cuenta.", response.getBody().getErrorMessage());
     }
+
 }
