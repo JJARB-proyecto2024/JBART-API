@@ -4,13 +4,10 @@ import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
-import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.rest.userBrand.UserBrandRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,7 +90,7 @@ public class ProductController {
                 .map(existingProduct -> {
                     existingProduct.setName(product.getName());
                     existingProduct.setPrice(product.getPrice());
-                    existingProduct.setPicture(product.getPicture());
+                    existingProduct.setModel(product.getModel());
                     existingProduct.setQuantityInStock(product.getQuantityInStock());
                     existingProduct.setStatus(product.getStatus());
                     existingProduct.setCategory(product.getCategory());
