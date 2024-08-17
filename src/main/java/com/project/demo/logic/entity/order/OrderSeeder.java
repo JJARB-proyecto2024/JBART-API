@@ -29,279 +29,48 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
-        this.createOrders();
-        this.createOrders2();
-        this.createOrders3();
-        this.createOrders4();
-        this.createOrders5();
-        this.createOrders6();
-        this.createOrders7();
-
+        createOrders();
     }
 
     private void createOrders() {
-        //estados de la orden
         List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
+        Object[][] ordersData = {
+                {4L, 1L, 1, 2, 5.00, orderStatuses.get(0)},
+                {5L, 1L, 3, 2, 10.00, orderStatuses.get(0)},
+                {5L, 2L, 3, 2, 10.00, orderStatuses.get(1)},
+                {5L, 3L, 3, 2, 10.00, orderStatuses.get(2)},
+                {6L, 3L, 5, 2, 15.00, orderStatuses.get(0)},
+                {6L, 4L, 5, 2, 15.00, orderStatuses.get(1)},
+                {6L, 5L, 5, 2, 15.00, orderStatuses.get(3)}
+        };
 
-        String selectedStatus = orderStatuses.get(0);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(4L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
+        for (Object[] orderData : ordersData) {
+            createOrder(orderData);
         }
-
-        Product product = productRepository.findById(1L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 1 de la orden 1 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(1);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(5.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-
-        /*
-        // Crear  orden
-        for (String status : orderStatuses) {
-            Order order = new Order();
-            order.setUserBuyer(userBuyer);
-            order.setProduct(product);
-            order.setQuantity(2);
-            order.setSubTotal(product.getPrice() * 2);
-            order.setShippingCost(5.00);
-            order.setTotal(order.getSubTotal() + order.getShippingCost());
-            order.setStatus(status);
-
-            orderRepository.save(order);
-            System.out.println("Orden creada con ID: " + order.getId() + ", Estado: " + order.getStatus());
-        }*/
     }
 
-    private void createOrders2() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(0);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(5L).orElse(null);
+    private void createOrder(Object[] orderData) {
+        UserBuyer userBuyer = userBuyerRepository.findById((Long) orderData[0]).orElse(null);
         if (userBuyer == null) {
             System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
+            return;
         }
 
-        Product product = productRepository.findById(1L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 1 de la orden 2 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-    }
-
-    private void createOrders3() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(1);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(5L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(2L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 2 de la orden 3 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-    }
-
-    private void createOrders4() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(2);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(5L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(3L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 5 de la orden 4 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(3);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(10.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-    }
-
-    private void createOrders5() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(0);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(6L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(3L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 3 de la orden 5 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-
-    }
-
-    private void createOrders6() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(1);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(6L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(4L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 4 de la orden 6 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-
-    }
-
-    private void createOrders7() {
-        //estados de la orden
-        List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
-
-        String selectedStatus = orderStatuses.get(3);
-
-        UserBuyer userBuyer = userBuyerRepository.findById(6L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(5L).orElse(null);
-        if (product == null) {
-            System.out.println("Producto 5 de la orden 7 no encontrado");
-            return; // Producto no encontrado
-        }
-
-        // Crear la orden con el estado seleccionado
-        Order order = new Order();
-        order.setUserBuyer(userBuyer);
-        order.setProduct(product);
-        order.setQuantity(5);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(15.00);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus(selectedStatus);
-
-        orderRepository.save(order);
-
-    }
-
-    /*
-    private void createOrders() {
-        Order order = new Order();
-
-        UserBuyer userBuyer = userBuyerRepository.findById(2L).orElse(null);
-        if (userBuyer == null) {
-            System.out.println("UserBuyer no encontrado");
-            return; // Usuario comprador no encontrado
-        }
-
-        Product product = productRepository.findById(1L).orElse(null);
+        Product product = productRepository.findById((Long) orderData[1]).orElse(null);
         if (product == null) {
             System.out.println("Producto no encontrado");
-            return; // Producto no encontrado
+            return;
         }
 
+        Order order = new Order();
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
-        order.setQuantity(2);
-        order.setSubTotal(product.getPrice() * 2);
-        order.setShippingCost(5.00);
+        order.setQuantity((Integer) orderData[2]);
+        order.setSubTotal(product.getPrice() * (Integer) orderData[3]);
+        order.setShippingCost((Double) orderData[4]);
         order.setTotal(order.getSubTotal() + order.getShippingCost());
-        order.setStatus("Pendiente");
-        order.setDeliveryLocation("San Rafael Arriba, Desamparados");
-        order.setCurrentLocation("San Rafael Abajo, Desamparados");
+        order.setStatus((String) orderData[5]);
+
         orderRepository.save(order);
-        System.out.println("Orden creada: " + order);
-    }*/
+    }
 }
