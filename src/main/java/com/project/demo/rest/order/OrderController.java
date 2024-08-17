@@ -57,7 +57,7 @@ public class OrderController {
         return orderRepository.findById(id)
                 .map(existingOrder -> {
                     existingOrder.setQuantity(order.getQuantity());
-                    existingOrder.setSubTotal(order.getSubTotal());
+                    existingOrder.setSubtotal(order.getSubtotal());
                     existingOrder.setShippingCost(order.getShippingCost());
                     existingOrder.setTotal(order.getTotal());
                     existingOrder.setStatus(order.getStatus());
