@@ -23,7 +23,7 @@ public class Order {
     @JoinColumn(name = "product_id")
     private Product product;
     private Integer quantity;
-    private Double subTotal;
+    private Double subtotal;
     private Double shippingCost;
     private Double total;
     private String status;
@@ -73,12 +73,12 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public Double getSubTotal() {
-        return subTotal;
+    public Double getSubtotal() {
+        return subtotal;
     }
 
-    public void setSubTotal(Double subTotal) {
-        this.subTotal = subTotal;
+    public void setSubtotal(Double subTotal) {
+        this.subtotal = subTotal;
     }
 
     public Double getShippingCost() {

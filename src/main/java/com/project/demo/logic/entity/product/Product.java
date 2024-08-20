@@ -21,13 +21,15 @@ public class Product {
     private String name;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column(name = "size", nullable = false)
+    private String size;
     @Column(nullable = false)
     private Integer quantityInStock;
-    @Column(name = "picture", nullable = true)
-    private String picture;
+    @Column(name = "model", nullable = true)
+    private String model;
     @Column(name = "rate", nullable = true)
     private Integer rate;
-    @Column(name = "status",nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -76,6 +78,14 @@ public class Product {
         this.price = price;
     }
 
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
     public Integer getQuantityInStock() {
         return quantityInStock;
     }
@@ -84,12 +94,12 @@ public class Product {
         this.quantityInStock = quantityInStock;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getModel() {
+        return model;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setModel(String picture) {
+        this.model = picture;
     }
 
     public String getStatus() {
@@ -100,7 +110,8 @@ public class Product {
         this.status = status;
     }
 
-    public Product() {}
+    public Product() {
+    }
 
     public Category getCategory() {
         return category;

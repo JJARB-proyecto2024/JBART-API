@@ -3,6 +3,11 @@ package com.project.demo.logic.entity.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import com.project.demo.logic.entity.notification.Notification;
+import com.project.demo.logic.entity.notification.NotificationHandler;
+import com.project.demo.logic.entity.notification.NotificationRepository;
+import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
+import com.project.demo.logic.entity.notificationTemplate.NotificationTemplateRepository;
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
@@ -10,6 +15,7 @@ import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.notification.NotificationController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,14 @@ public class PaypalService {
     private ProductRepository productRepository;
     @Autowired
     private UserBuyerRepository userBuyerRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationTemplateRepository notificationTemplateRepository;
+
+    @Autowired
+    private NotificationHandler notificationHandler;
+
 
     public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId, String currency) throws PayPalRESTException {
         double subtotal = 0;
@@ -99,14 +114,29 @@ public class PaypalService {
             order.setUserBuyer(userBuyer);
             order.setProduct(getProductFromItemDto(itemDto));
             order.setQuantity(itemDto.getQuantity());
-            order.setSubTotal(subtotal);
+            order.setSubtotal(subtotal);
             order.setShippingCost(shipping);
             order.setTotal(total);
             order.setStatus(status);
             order.setDeliveryLocation(deliveryLocation);
-            order.setCurrentLocation(getProductBrandFromItemDto(itemDto).getMainLocationAddress());
-
             orderRepository.save(order);
+
+            Notification buyerNotification = new Notification();
+            buyerNotification.setUser(userBuyer);
+            buyerNotification.setSeen(false);
+            Optional<NotificationTemplate> buyerNotificationTemplateOptional = this.notificationTemplateRepository.findById(1L);
+            buyerNotification.setNotificationTemplate(buyerNotificationTemplateOptional.get());
+            notificationRepository.save(buyerNotification);
+            notificationHandler.broadcastNotification(buyerNotification);
+
+
+            Notification brandNotification = new Notification();
+            brandNotification.setUser(getProductFromItemDto(itemDto).getUserBrand());
+            brandNotification.setSeen(false);
+            Optional<NotificationTemplate> brandNotificationTemplateOptional = this.notificationTemplateRepository.findById(5L);
+            brandNotification.setNotificationTemplate(brandNotificationTemplateOptional.get());
+            notificationRepository.save(brandNotification);
+            notificationHandler.broadcastNotification(brandNotification);
         }
     }
 
