@@ -66,9 +66,9 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
         order.setUserBuyer(userBuyer);
         order.setProduct(product);
         order.setQuantity((Integer) orderData[2]);
-        order.setSubTotal(product.getPrice() * (Integer) orderData[3]);
+        order.setSubtotal(product.getPrice() * (Integer) orderData[3]);
         order.setShippingCost((Double) orderData[4]);
-        order.setTotal(order.getSubTotal() + order.getShippingCost());
+        order.setTotal(order.getSubtotal() + order.getShippingCost());
         order.setStatus((String) orderData[5]);
 
         orderRepository.save(order);
