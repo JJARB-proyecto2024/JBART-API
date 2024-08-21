@@ -62,19 +62,12 @@ public class EmailService {
                 "    <div class= 'container mb-3 rounded' style='background-color: #F4DFC8; text-align: center; width: 38%; height: 750px; color: #282828; margin-top: 20px;'>\n" +
                 "        <div class='container mb-3 rounded' style='color: #282828;'>\n" +
                 "            <div style='width: 100%; text-align: center; color: #282828;'>\n" +
-                "                <img src='https://res.cloudinary.com/dbd6uaiux/image/upload/v1721033187/JBArt2_p5naka.png' class='me-0' height='300' alt='' class='d-inline-block align-text-top' style='text-align: center; margin-top: 10px;'/>\n" +
+                "                <img src='https://res.cloudinary.com/dyrj7gds0/image/upload/v1723840833/JBArt2_hgsgmk.png' class='me-0' height='300' alt='' class='d-inline-block align-text-top' style='text-align: center; margin-top: 10px;'/>\n" +
                 "            </div>\n" +
                 "            <div style='width: 100%; text-align: center; color: #282828;'>\n" +
                 "                <h1 style='margin-top: 7px; text-align: center;'> ¡Hola " + " " + name + "!</h1>\n" +
                 "                <p style='margin-top: 25px; text-align: center;'>" + emailBody + "</p>\n" +
                 "                <p style='margin-top: 25px; text-align: center;'>Atentamente,<br>El equipo de JBart</p>\n" +
-                "            </div>\n" +
-                "        </div>\n" +
-                "        <div class='container mb-5' style='width: 100%; text-align: center; margin-top: 180px;'>\n" +
-                "            <div class='container'>\n" +
-                "                <div class='container'>\n" +
-                "                    &copy; 2023 - JBart\n" +
-                "                </div>\n" +
                 "            </div>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
