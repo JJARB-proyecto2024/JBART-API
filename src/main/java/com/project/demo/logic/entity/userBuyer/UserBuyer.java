@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.userBuyer;
 
+import com.project.demo.logic.entity.avatar.Avatar;
 import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
@@ -39,6 +40,9 @@ public class UserBuyer extends User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @OneToOne(mappedBy = "userBuyer", fetch = FetchType.LAZY)
+    private Avatar avatar;
 
     @OneToMany(mappedBy = "userBuyer", fetch = FetchType.LAZY)
     private List<RateBrand> rateBrand;
