@@ -1,5 +1,6 @@
 package com.project.demo.rest.order;
 
+import com.project.demo.logic.entity.avatar.Avatar;
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
@@ -8,7 +9,9 @@ import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.userBuyer.UserBuyerRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +32,9 @@ public class OrderController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserBuyerRestController userBuyerRestController;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
@@ -107,6 +113,13 @@ public class OrderController {
             throw new RuntimeException("Order not found with id: " + id);
         }
         orderRepository.deleteById(id);
+    }
+
+    @GetMapping("/ByOrderStatus/{id}")
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
+    public List<Order> getByOrderStatus(@PathVariable Long id) {
+        Long buyerId = userBuyerRestController.authenticatedUser().getId();
+        return orderRepository.findByOrderStatus(buyerId, id);
     }
 
     @GetMapping("/brand")

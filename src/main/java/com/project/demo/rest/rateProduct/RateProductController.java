@@ -1,6 +1,8 @@
 package com.project.demo.rest.rateProduct;
 
 
+import com.project.demo.logic.entity.order.Order;
+import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
@@ -9,6 +11,7 @@ import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.rateProduct.RateProductRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import com.project.demo.rest.order.OrderController;
 import com.project.demo.rest.userBuyer.UserBuyerRestController;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
@@ -36,9 +39,14 @@ public class RateProductController {
     @Autowired
     private UserBuyerRepository userBuyerRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private UserBuyerRestController userBuyerRestController;
+
+    @Autowired
+    private OrderController orderController;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,7 +71,6 @@ public class RateProductController {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
-
         UserBuyer userBuyer = userBuyerRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("User Buyer not found with id: " + buyerId));
 
@@ -73,17 +80,23 @@ public class RateProductController {
         if (existingRating.isPresent()) {
             throw new IllegalArgumentException("User has already rated this brand.");
         } else {
-            rateProduct.setProduct(product);
-            rateProduct.setUserBuyer(userBuyer);
+            // Check if the user has already rated this brand
+            List<Order> existingOrder = orderRepository.findByOrderStatus(buyerId, productId);
+            if (!existingOrder.isEmpty()) {
+                rateProduct.setProduct(product);
+                rateProduct.setUserBuyer(userBuyer);
 
-            RateProduct savedRateBrand = rateProductRepository.save(rateProduct);
+                RateProduct savedRateBrand = rateProductRepository.save(rateProduct);
 
-            // Calcular la calificación promedio y actualizar el UserBrand
-            Integer averageRating = calculateAverageRate(productId);
-            product.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
-            productRepository.save(product);
+                // Calcular la calificación promedio y actualizar el UserBrand
+                Integer averageRating = calculateAverageRate(productId);
+                product.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+                productRepository.save(product);
 
-            return savedRateBrand;
+                return savedRateBrand;
+            }else {
+                throw new IllegalArgumentException("The order list is pending.");
+            }
         }
     }
 
