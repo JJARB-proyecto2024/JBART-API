@@ -35,13 +35,13 @@ public class OrderSeeder implements ApplicationListener<ContextRefreshedEvent> {
     private void createOrders() {
         List<String> orderStatuses = Arrays.asList("Pendiente", "En Proceso", "Enviado", "Entregado");
         Object[][] ordersData = {
-                {4L, 1L, 1, 2, 5.00, orderStatuses.get(0)},
-                {5L, 1L, 3, 2, 10.00, orderStatuses.get(0)},
-                {5L, 2L, 3, 2, 10.00, orderStatuses.get(1)},
-                {5L, 3L, 3, 2, 10.00, orderStatuses.get(2)},
-                {6L, 3L, 5, 2, 15.00, orderStatuses.get(0)},
-                {6L, 4L, 5, 2, 15.00, orderStatuses.get(1)},
-                {6L, 5L, 5, 2, 15.00, orderStatuses.get(3)}
+                {13L, 1L, 1, 2, 5.00, orderStatuses.get(0)},
+                {13L, 1L, 3, 2, 10.00, orderStatuses.get(0)},
+                {13L, 2L, 3, 2, 10.00, orderStatuses.get(1)},
+                {15L, 3L, 3, 2, 10.00, orderStatuses.get(2)},
+                {14L, 3L, 5, 2, 15.00, orderStatuses.get(0)},
+                {14L, 4L, 5, 2, 15.00, orderStatuses.get(1)},
+                {15L, 5L, 5, 2, 15.00, orderStatuses.get(3)}
         };
 
         for (Object[] orderData : ordersData) {
