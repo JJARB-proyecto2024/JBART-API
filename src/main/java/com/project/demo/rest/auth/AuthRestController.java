@@ -87,7 +87,7 @@ public class AuthRestController {
             User authenticatedUser = authenticationService.authenticate(user);
 
             if (!"Activo".equals(authenticatedUser.getStatus())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse("Cuenta inactiva. Por favor, ve al inlace de activación de cuenta."));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse("Cuenta inactiva. Por favor, ve al enlace de activación de cuenta."));
             }
 
             String jwtToken = jwtService.generateToken(authenticatedUser);
