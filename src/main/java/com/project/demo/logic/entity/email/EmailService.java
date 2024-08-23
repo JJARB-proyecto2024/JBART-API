@@ -48,7 +48,6 @@ public class EmailService {
     }
 
     private String createHtmlContent(String name, String emailBody) {
-        // Load your HTML template from a file or use a string template
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +

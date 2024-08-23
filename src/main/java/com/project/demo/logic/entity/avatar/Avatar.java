@@ -1,13 +1,10 @@
 package com.project.demo.logic.entity.avatar;
 
-import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.util.Date;
-import java.util.List;
+
 
 @Table(name = "avatar")
 @Entity

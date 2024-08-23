@@ -1,10 +1,6 @@
 package com.project.demo.logic.entity.rateProduct;
 
 import com.project.demo.logic.entity.product.Product;
-import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBuyer.UserBuyer;
-import jakarta.persistence.*;
-import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import jakarta.persistence.*;
 

@@ -1,7 +1,6 @@
 package com.project.demo.logic.entity.notificationTemplate;
 
 import com.project.demo.logic.entity.notification.Notification;
-import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
 
 import java.util.List;

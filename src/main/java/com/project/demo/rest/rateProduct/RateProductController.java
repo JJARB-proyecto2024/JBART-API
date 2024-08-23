@@ -66,7 +66,6 @@ public class RateProductController {
         UserBuyer userBuyer = userBuyerRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("User Buyer not found with id: " + buyerId));
 
-        // Check if the user has already rated this brand
         Optional<RateProduct> existingRating = rateProductRepository.findByIdBuyerAndIdProduct(buyerId, productId);
 
         if (existingRating.isPresent()) {
@@ -78,10 +77,8 @@ public class RateProductController {
                 rateProduct.setUserBuyer(userBuyer);
 
                 RateProduct savedRateBrand = rateProductRepository.save(rateProduct);
-
-                // Calcular la calificación promedio y actualizar el UserBrand
                 Integer averageRating = calculateAverageRate(productId);
-                product.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+                product.setRate(averageRating);
                 productRepository.save(product);
 
                 return savedRateBrand;
@@ -97,7 +94,7 @@ public class RateProductController {
             return 0;
         }
         int sum = rates.stream().mapToInt(RateProduct::getRate).sum();
-        return sum / rates.size(); // División entera
+        return sum / rates.size();
     }
 
     @GetMapping("/{id}")

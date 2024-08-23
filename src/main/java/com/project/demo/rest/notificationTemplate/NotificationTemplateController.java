@@ -1,7 +1,5 @@
 package com.project.demo.rest.notificationTemplate;
 
-import com.project.demo.logic.entity.notification.Notification;
-import com.project.demo.logic.entity.notification.NotificationRepository;
 import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
 import com.project.demo.logic.entity.notificationTemplate.NotificationTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;

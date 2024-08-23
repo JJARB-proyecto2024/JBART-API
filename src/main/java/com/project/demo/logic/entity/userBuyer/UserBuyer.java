@@ -3,8 +3,6 @@ package com.project.demo.logic.entity.userBuyer;
 import com.project.demo.logic.entity.avatar.Avatar;
 import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.design.Design;
-import com.project.demo.logic.entity.notification.Notification;
-import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.rateOrder.RateOrder;
 import com.project.demo.logic.entity.rateProduct.RateProduct;

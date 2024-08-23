@@ -46,23 +46,17 @@ public class OtpService {
             LocalDateTime now = LocalDateTime.now();
 
             if (otp.getExpiryTime().isAfter(now)) {
-                // OTP válido y no expirado, procede con la validación
                 otpRepository.delete(otp);
                 return true;
             } else {
-                // OTP expirado, eliminarlo de la base de datos (opcional)
                 otpRepository.delete(otp);
                 return false;
             }
         }
-
-        // OTP no encontrado
         return false;
     }
 
-
-    // Método para limpiar OTPs expirados
-    @Scheduled(fixedRate = 60000) // Ejecutar cada 1 minuto (ajustar según necesidad)
+    @Scheduled(fixedRate = 60000)
     public void cleanExpiredOtps() {
         LocalDateTime now = LocalDateTime.now();
         List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);

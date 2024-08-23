@@ -1,10 +1,7 @@
 package com.project.demo.rest.design;
 
-import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.design.DesignRepository;
-import com.project.demo.logic.entity.notification.Notification;
-import com.project.demo.logic.entity.notification.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

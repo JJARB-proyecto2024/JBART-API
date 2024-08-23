@@ -13,10 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,10 +72,8 @@ public class RateBrandController {
             rateBrand.setUserBuyer(userBuyer);
 
             RateBrand savedRateBrand = rateBrandRepository.save(rateBrand);
-
-            // Calcular la calificación promedio y actualizar el UserBrand
             Integer averageRating = calculateAverageRate(brandId);
-            userBrand.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+            userBrand.setRate(averageRating);
             userBrandRepository.save(userBrand);
 
             return savedRateBrand;
@@ -92,7 +86,7 @@ public class RateBrandController {
             return 0;
         }
         int sum = rates.stream().mapToInt(RateBrand::getRate).sum();
-        return sum / rates.size(); // División entera
+        return sum / rates.size();
     }
 
     @GetMapping("/{id}")

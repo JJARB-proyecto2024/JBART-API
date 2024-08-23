@@ -78,7 +78,6 @@ public class UserRestController {
         return (User) authentication.getPrincipal();
     }
 
-    // Endpoint para generar OTP y enviarlo por correo
     @PostMapping("/generatePasswordResetOtp")
     @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
@@ -86,7 +85,7 @@ public class UserRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
         String otp = String.valueOf(new Random().nextInt(999999));
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10); // Expira en 10 minutos
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10);
 
         Otp otpEntity = new Otp();
         otpEntity.setOtpCode(otp);
@@ -100,11 +99,11 @@ public class UserRestController {
         return "OTP generado exitosamente y enviado a " + email;
     }
 
-    // Endpoint para validar OTP y actualizar la contraseña
+
     @PostMapping("/resetPassword")
     @PreAuthorize("permitAll")
     public boolean resetPassword(@RequestBody ValidateOtpRequest request) {
-        String email = request.getEmail(); // Correo electrónico fijo
+        String email = request.getEmail();
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
@@ -115,26 +114,21 @@ public class UserRestController {
             LocalDateTime now = LocalDateTime.now();
 
             if (otp.getExpiryTime().isAfter(now)) {
-                // OTP válido y no expirado, procede con la validación
                 otpRepository.delete(otp);
-                // Actualizar la contraseña del usuario
                 User user = userRepository.findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;
             } else {
-                // OTP expirado, eliminarlo de la base de datos
                 otpRepository.delete(otp);
                 System.out.println("El código OTP ha expirado.");
                 return false;
             }
         }
-        // OTP no encontrado
         return false;
     }
 
-    // Método para enviar correo electrónico con el OTP de recuperación de contraseña
     private void sendPasswordResetOtpEmail(String otp) {
         String email = "robertaraya382@gmail.com";
         String subject = "Recuperación de contraseña - Código de verificación";
@@ -148,9 +142,9 @@ public class UserRestController {
         }
     }
 
-    // Método para crear detalles de correo electrónico
+
     private EmailDetails createEmailDetails(String emailBody) {
-        EmailInfo fromAddress = new EmailInfo("JBart", "robertaraya382@gmail.com"); // Ajustar según tu configuración
+        EmailInfo fromAddress = new EmailInfo("JBart", "robertaraya382@gmail.com");
         EmailInfo toAddress = new EmailInfo("Usuario", "robertaraya382@gmail.com");
         String subject = "Recuperación de contraseña - Código de verificación";
 

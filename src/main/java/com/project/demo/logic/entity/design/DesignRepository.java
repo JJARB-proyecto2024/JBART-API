@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.design;
 
-import com.project.demo.logic.entity.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

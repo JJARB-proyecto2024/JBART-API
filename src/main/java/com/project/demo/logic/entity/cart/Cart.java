@@ -1,8 +1,6 @@
 package com.project.demo.logic.entity.cart;
 
-import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.design.Design;
-import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import jakarta.persistence.*;

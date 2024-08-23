@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.product;
 
-import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.rateProduct.RateProduct;

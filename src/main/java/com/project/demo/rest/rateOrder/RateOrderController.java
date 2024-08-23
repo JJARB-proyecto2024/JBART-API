@@ -81,7 +81,7 @@ public class RateOrderController {
             return 0;
         }
         int sum = rates.stream().mapToInt(RateOrder::getRate).sum();
-        return sum / rates.size(); // División entera
+        return sum / rates.size();
     }
 
     @GetMapping("/{id}")
