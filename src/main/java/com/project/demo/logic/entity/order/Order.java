@@ -1,11 +1,14 @@
 package com.project.demo.logic.entity.order;
 
+import com.project.demo.logic.entity.rateOrder.RateOrder;
+import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -20,13 +23,15 @@ public class Order {
     @JoinColumn(name = "product_id")
     private Product product;
     private Integer quantity;
-    private Double subTotal;
+    private Double subtotal;
     private Double shippingCost;
     private Double total;
     private String status;
     private String deliveryLocation;
     private String currentLocation;
 
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<RateOrder> rateOrder;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -68,12 +73,12 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public Double getSubTotal() {
-        return subTotal;
+    public Double getSubtotal() {
+        return subtotal;
     }
 
-    public void setSubTotal(Double subTotal) {
-        this.subTotal = subTotal;
+    public void setSubtotal(Double subTotal) {
+        this.subtotal = subTotal;
     }
 
     public Double getShippingCost() {

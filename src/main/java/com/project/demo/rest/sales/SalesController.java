@@ -30,4 +30,14 @@ public class SalesController {
             throw new RuntimeException("Error while fetching most sold products", e);
         }
     }
+
+    @GetMapping("/total-earnings")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public List<Object[]> getTotalEarnings() {
+        try {
+            return orderRepository.getTotalEarningsByBrand();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching total earnings", e);
+        }
+    }
 }

@@ -10,6 +10,8 @@ import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
+import com.project.demo.logic.entity.paypal.PaymentRequest;
 import com.project.demo.logic.entity.paypal.PaypalService;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
@@ -22,8 +24,6 @@ import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
-import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
-import com.project.demo.logic.entity.paypal.ItemDto;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,19 +83,32 @@ public class AuthRestController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody User user) {
-        User authenticatedUser = authenticationService.authenticate(user);
+        try {
+            User authenticatedUser = authenticationService.authenticate(user);
 
-        String jwtToken = jwtService.generateToken(authenticatedUser);
+            if (!"Activo".equals(authenticatedUser.getStatus())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse("Cuenta inactiva. Por favor, ve al enlace de activación de cuenta."));
+            }
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+            String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        Optional<User> foundedUser = userRepository.findByEmail(user.getEmail());
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(jwtToken);
+            loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
-        foundedUser.ifPresent(loginResponse::setAuthUser);
+            User foundedUser = userRepository.findByEmail(user.getEmail())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            loginResponse.setAuthUser(foundedUser);
 
-        return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(loginResponse);
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(new LoginResponse(e.getReason()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("Error de autenticación. Por favor, verifica tus credenciales."));
+        }
     }
 
     @PostMapping("/signup")
@@ -204,6 +217,25 @@ public class AuthRestController {
         }
     }
 
+    @PostMapping("/resetStatusAccount")
+    @PreAuthorize("permitAll")
+    public boolean resetStatusAccount(@RequestBody ValidateOtpRequest request) {
+        String email = request.getEmail();
+        String otpCode = request.getOtpCode();
+
+        boolean result = validateOtp(email, otpCode);
+
+        if (result) {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado para el email: " + email));
+            user.setStatus("Activo");
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean validateOtp(String email, String otpCode) {
         Optional<Otp> otpOptional = otpRepository.findByOtpCodeAndEmail(otpCode, email);
 
@@ -258,13 +290,13 @@ public class AuthRestController {
     }
 
     @PostMapping("/createPayment")
-    public ResponseEntity<?> createPayment(@RequestBody List<ItemDto> items, @RequestHeader("host") String host) {
+    public ResponseEntity<?> createPayment(@RequestBody PaymentRequest paymentRequest, @RequestHeader("host") String host) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
             Long userId = currentUser.getId();
 
-            Payment payment = paypalService.createPayment(items, "http://" + host, userId);
+            Payment payment = paypalService.createPayment(paymentRequest.getItems(), "http://" + host, userId, paymentRequest.getCurrency());
             String approvalLink = payment.getLinks().stream()
                     .filter(link -> "approval_url".equals(link.getRel()))
                     .findFirst()
