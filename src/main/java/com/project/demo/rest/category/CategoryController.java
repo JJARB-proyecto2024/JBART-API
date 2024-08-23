@@ -2,18 +2,27 @@ package com.project.demo.rest.category;
 
 import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.category.CategoryRepository;
+import com.project.demo.logic.entity.product.Product;
+import com.project.demo.logic.entity.product.ProductRepository;
+import com.project.demo.logic.entity.user.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("categories")
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,8 +72,12 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-    public void deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        if (!productRepository.findProductsWithCategory(id).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LoginResponse("No se pudo eliminar la categoría debido a que existen productos asignados a la misma."));
+        }
         categoryRepository.deleteById(id);
+        return ResponseEntity.ok("Categoría eliminada exitosamente.");
     }
 
 }
