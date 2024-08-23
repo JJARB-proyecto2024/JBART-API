@@ -1,11 +1,14 @@
 package com.project.demo.logic.entity.order;
 
+import com.project.demo.logic.entity.rateOrder.RateOrder;
+import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -27,6 +30,8 @@ public class Order {
     private String deliveryLocation;
     private String currentLocation;
 
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<RateOrder> rateOrder;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

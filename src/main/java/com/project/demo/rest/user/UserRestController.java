@@ -1,16 +1,14 @@
 package com.project.demo.rest.user;
 
 import com.project.demo.logic.entity.Otp.Otp;
-import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
-import com.project.demo.logic.entity.email.EmailInfo;
-import com.project.demo.logic.entity.user.User;
-import com.project.demo.logic.entity.email.EmailDetails;
-import com.project.demo.logic.entity.email.EmailService;
-import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.Otp.OtpRepository;
+import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
+import com.project.demo.logic.entity.email.EmailDetails;
+import com.project.demo.logic.entity.email.EmailInfo;
+import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.user.User;
+import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,11 +52,6 @@ public class UserRestController {
     public User getUserById(@PathVariable Long id) {
         return userRepository.findById(id).orElseThrow(RuntimeException::new);
     }
-
-    /*@GetMapping("/filterByName/{name}")
-    public List<User> getUserById(@PathVariable String name) {
-        return UserRepository.findUsersWithCharacterInName(name);
-    }*/
 
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {

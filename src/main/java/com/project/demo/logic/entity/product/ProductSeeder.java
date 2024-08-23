@@ -1,17 +1,13 @@
 package com.project.demo.logic.entity.product;
 
-import com.project.demo.logic.entity.category.Category;
 import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.UserRepository;
-import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent> {
@@ -25,6 +21,7 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
     private final ProductRepository productRepository;
 
     private final UserBrandRepository userBrandRepository;
+
 
 
     public ProductSeeder(
@@ -44,179 +41,36 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        this.createProduct1();
-        this.createProduct2();
-        this.createProduct3();
-        this.createProduct4();
+        createProducts();
     }
 
-    private void createProduct1() {
-        Product productNew = new Product();
+    private void createProducts() {
+        Object[][] productsData = {
+                {"Producto 1", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 6, "Activo", "Calzado", "Lorem Ipsum"},
+                {"Producto 2", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 3, "Activo", "Pantalones", "Adidas"},
+                {"Producto 3", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Sweaters", "Nike"},
+                {"Producto 4", 100.00,"34", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Pantalones", "Nike"},
+                {"Producto 5", 100.00, "M", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Camisas", "Adidas"}
+        };
 
-        productNew.setName("Producto 1");
-        productNew.setPrice(60.00);
-        productNew.setSize("XL, L, M, S, XS");
-        productNew.setModel("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        productNew.setQuantityInStock(6);
-        productNew.setStatus("Activo");
-        productNew.setRate(2);
+        for (Object[] productData : productsData) {
+            Product product = new Product();
+            product.setName((String) productData[0]);
+            product.setPrice((Double) productData[1]);
+            product.setSize((String) productData[2]);
+            product.setModel((String) productData[3]);
+            product.setQuantityInStock((Integer) productData[4]);
+            product.setStatus((String) productData[5]);
 
-        Optional<Category> optionalCategory = categoryRepository.findByName("Calzado");
+            categoryRepository.findByName((String) productData[6]).ifPresent(product::setCategory);
+            userBrandRepository.findByName((String) productData[7]).ifPresent(product::setUserBrand);
 
-        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Lorem Ipsum");
-
-        if (optionalCategory.isEmpty()) {
-            System.err.println("Category 'Calzado' not found.");
-            return;
+            if (product.getCategory() != null && product.getUserBrand() != null) {
+                productRepository.save(product);
+            }
         }
-
-        if (optionalUserBrand.isEmpty()) {
-            System.err.println("User brand 'Lorem Ipsum' not found.");
-            return;
-        }
-
-        Category category = optionalCategory.get();
-        UserBrand userBrand = optionalUserBrand.get();
-
-        var product = new Product();
-        product.setName(productNew.getName());
-        product.setPrice(productNew.getPrice());
-        product.setSize(productNew.getSize());
-        product.setModel(productNew.getModel());
-        product.setQuantityInStock(productNew.getQuantityInStock());
-        product.setStatus(productNew.getStatus());
-        product.setRate(productNew.getRate());
-
-        product.setCategory(category);
-        product.setUserBrand(userBrand);
-        productRepository.save(product);
     }
 
-    private void createProduct2() {
-        Product productNew = new Product();
-
-        productNew.setName("Producto 2");
-        productNew.setPrice(30.00);
-        productNew.setSize("XL, L, M, S, XS");
-        productNew.setModel("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        productNew.setQuantityInStock(3);
-        productNew.setStatus("Activo");
-        productNew.setRate(3);
-
-        Optional<Category> optionalCategory = categoryRepository.findByName("Pantalones");
-
-        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Adidas");
-
-        if (optionalCategory.isEmpty()) {
-            System.err.println("Category 'Pantalones' not found.");
-            return;
-        }
-
-        if (optionalUserBrand.isEmpty()) {
-            System.err.println("User brand 'Adidas' not found.");
-            return;
-        }
-
-        Category category = optionalCategory.get();
-        UserBrand userBrand = optionalUserBrand.get();
-
-        var product = new Product();
-        product.setName(productNew.getName());
-        product.setPrice(productNew.getPrice());
-        product.setSize(productNew.getSize());
-        product.setModel(productNew.getModel());
-        product.setQuantityInStock(productNew.getQuantityInStock());
-        product.setStatus(productNew.getStatus());
-        product.setRate(productNew.getRate());
-
-        product.setCategory(category);
-        product.setUserBrand(userBrand);
-        productRepository.save(product);
-    }
-
-    private void createProduct3() {
-        Product productNew = new Product();
-
-        productNew.setName("Producto 3");
-        productNew.setPrice(100.00);
-        productNew.setSize("XL, L, M, S, XS");
-        productNew.setModel("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        productNew.setQuantityInStock(9);
-        productNew.setStatus("Activo");
-        productNew.setRate(5);
-
-        Optional<Category> optionalCategory = categoryRepository.findByName("Sweaters");
-
-        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Nike");
-
-        if (optionalCategory.isEmpty()) {
-            System.err.println("Category 'Sweaters' not found.");
-            return;
-        }
-
-        if (optionalUserBrand.isEmpty()) {
-            System.err.println("User brand 'Nike' not found.");
-            return;
-        }
-
-        Category category = optionalCategory.get();
-        UserBrand userBrand = optionalUserBrand.get();
-
-        var product = new Product();
-        product.setName(productNew.getName());
-        product.setPrice(productNew.getPrice());
-        product.setSize(productNew.getSize());
-        product.setModel(productNew.getModel());
-        product.setQuantityInStock(productNew.getQuantityInStock());
-        product.setStatus(productNew.getStatus());
-        product.setRate(productNew.getRate());
-
-        product.setCategory(category);
-        product.setUserBrand(userBrand);
-        productRepository.save(product);
-    }
-
-    private void createProduct4() {
-        Product productNew = new Product();
-
-        productNew.setName("Producto 4");
-        productNew.setPrice(100.00);
-        productNew.setSize("XL, L, M, S, XS");
-        productNew.setModel("https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg");
-        productNew.setQuantityInStock(9);
-        productNew.setStatus("Activo");
-        productNew.setRate(5);
-
-        Optional<Category> optionalCategory = categoryRepository.findByName("Pantalones");
-
-        Optional<UserBrand> optionalUserBrand = userBrandRepository.findByName("Nike");
-
-        if (optionalCategory.isEmpty()) {
-            System.err.println("Category 'Pantalones' not found.");
-            return;
-        }
-
-        if (optionalUserBrand.isEmpty()) {
-            System.err.println("User brand 'Nike' not found.");
-            return;
-        }
-
-        Category category = optionalCategory.get();
-        UserBrand userBrand = optionalUserBrand.get();
-
-        var product = new Product();
-        product.setName(productNew.getName());
-        product.setPrice(productNew.getPrice());
-        product.setSize(productNew.getSize());
-        product.setModel(productNew.getModel());
-        product.setQuantityInStock(productNew.getQuantityInStock());
-        product.setStatus(productNew.getStatus());
-        product.setRate(productNew.getRate());
-
-        product.setCategory(category);
-        product.setUserBrand(userBrand);
-        productRepository.save(product);
-    }
 
 
 }

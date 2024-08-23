@@ -12,6 +12,7 @@ import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
+import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.rest.notification.NotificationController;
@@ -45,7 +46,7 @@ public class PaypalService {
     private NotificationHandler notificationHandler;
 
 
-    public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId) throws PayPalRESTException {
+    public Payment createPayment(List<ItemDto> items, String baseUrl, Long userId, String currency) throws PayPalRESTException {
         double subtotal = 0;
 
         ItemList itemList = new ItemList();
@@ -55,7 +56,7 @@ public class PaypalService {
             subtotal += itemDto.getPrice() * itemDto.getQuantity();
             Item item = new Item();
             item.setName(itemDto.getName());
-            item.setCurrency("USD");
+            item.setCurrency(currency);
             item.setPrice(String.format(Locale.US, "%.2f", itemDto.getPrice()));
             item.setQuantity(String.valueOf(itemDto.getQuantity()));
             itemListItems.add(item);
@@ -67,7 +68,7 @@ public class PaypalService {
         double tax = 0;
 
         Amount amount = new Amount();
-        amount.setCurrency("USD");
+        amount.setCurrency(currency);
         Details details = new Details();
         details.setShipping(String.format(Locale.US, "%.2f", shipping));
         details.setTax(String.format(Locale.US, "%.2f", tax));
@@ -102,7 +103,7 @@ public class PaypalService {
         UserBuyer userBuyer = userBuyerRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("UserBuyer not found"));
 
-        createOrder(items, userBuyer, subtotal, shipping, tax, shipping + tax + subtotal, "Pending", userBuyer.getDeliveryLocation());
+        createOrder(items, userBuyer, subtotal, shipping, tax, shipping + tax + subtotal, "Pendiente", userBuyer.getDeliveryLocation());
 
         return createdPayment;
     }
@@ -142,6 +143,12 @@ public class PaypalService {
     private Product getProductFromItemDto(ItemDto itemDto) {
         return productRepository.findByName(itemDto.getName())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    private UserBrand getProductBrandFromItemDto(ItemDto itemDto) {
+        return productRepository.findByName(itemDto.getName())
+                .orElseThrow(() -> new RuntimeException("Product not found"))
+                .getUserBrand();
     }
 
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
