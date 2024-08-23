@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
-    @Query("SELECT o FROM Order o WHERE o.design.modifiedModel = ?1 ORDER BY o.createdAt DESC")
+    @Query("SELECT o FROM Order o WHERE o.design.product.userBrand.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByBrandId(Long userBrandId);
 
     @Query("SELECT o FROM Order o WHERE o.userBuyer.id = ?1 ORDER BY o.createdAt DESC")
