@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    @Override
+    @Query("SELECT o FROM Order o ORDER BY o.createdAt DESC")
+    List<Order> findAll();
 
     @Query("SELECT o FROM Order o WHERE o.design.product.userBrand.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByBrandId(Long userBrandId);
@@ -14,7 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.userBuyer.id = ?1 ORDER BY o.createdAt DESC")
     List<Order> findByUserId(Long userId);
 
-    @Query("SELECT o FROM Order o WHERE o.status = 'Entregado' AND o.userBuyer.id = ?1 AND o.design.Id = ?2 ")
+    @Query("SELECT o FROM Order o WHERE o.status = 'Entregado' AND o.userBuyer.id = ?1 AND o.design.product.Id = ?2 ")
     List<Order> findByOrderStatus(Long buyerId, Long productId);
 
     @Query("SELECT p.name AS productName, " +

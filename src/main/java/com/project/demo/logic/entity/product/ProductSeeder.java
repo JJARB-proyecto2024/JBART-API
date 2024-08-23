@@ -46,11 +46,24 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
     private void createProducts() {
         Object[][] productsData = {
-                {"Producto 1", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 6, "Activo", "Calzado", "Lorem Ipsum"},
-                {"Producto 2", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 3, "Activo", "Pantalones", "Adidas"},
-                {"Producto 3", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Sweaters", "Nike"},
-                {"Producto 4", 100.00,"34", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Pantalones", "Nike"},
-                {"Producto 5", 100.00, "M", "https://res.cloudinary.com/drlznypvr/image/upload/c_fill,w_200,h_200/v1720842225/439973425_8044300855602982_95489407312113055_n_bhwkz1.jpg", 9, "Activo", "Camisas", "Adidas"}
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Lorem Ipsum"},
+                {"Camisa Blanca 2", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Lorem Ipsum"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Guess"},
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Guess"},
+                {"Camisa", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Calvin Klein"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Nike"},
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Calvin Klein"},
+                {"Camisa", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Adidas"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Nike"},
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Adidas"},
+                {"Camisa", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Nike"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Nike"},
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Nike"},
+                {"Camisa", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Levis"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Nike"},
+                {"Camisa", 60.00, "48", "https://res.cloudinary.com/drlznypvr/image/upload/v1724432263/model_fnelge.glb", 9, "Activo", "Camisas", "Levis"},
+                {"Camisa", 30.00, "24" ,"https://res.cloudinary.com/drlznypvr/image/upload/v1724372297/model_jt443k.glb", 9, "Activo", "Camisas", "Puma"},
+                {"Sweater de mujer", 100.00, "M" , "https://res.cloudinary.com/drlznypvr/image/upload/v1724388828/sweater_woman_rstuqe.glb", 9, "Activo", "Sweaters", "Nike"},
         };
 
         for (Object[] productData : productsData) {
