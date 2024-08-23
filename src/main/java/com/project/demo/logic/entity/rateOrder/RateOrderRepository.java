@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface RateOrderRepository extends JpaRepository<RateOrder, Long> {
 
-    @Query("SELECT r FROM RateOrder r WHERE r.userBuyer.id = ?1 AND r.order.id = ?2")
+    @Query("SELECT r FROM RateOrder r WHERE r.userBuyer.id = ?1 AND r.order.Id = ?2")
     Optional<RateOrder> findByIdBuyerAndOrderId(Long buyerId, Long orderId);
 
     List<RateOrder> findByOrderId(Long orderId);

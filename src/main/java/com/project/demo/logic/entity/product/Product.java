@@ -1,7 +1,7 @@
 package com.project.demo.logic.entity.product;
 
-import com.project.demo.logic.entity.cart.Cart;
 import com.project.demo.logic.entity.category.Category;
+import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import jakarta.persistence.*;
@@ -36,7 +36,7 @@ public class Product {
     private List<RateProduct> rateProduct;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<Cart> carts;
+    private List<Design> designs;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)

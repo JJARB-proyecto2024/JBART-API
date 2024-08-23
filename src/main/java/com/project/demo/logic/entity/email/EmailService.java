@@ -48,7 +48,6 @@ public class EmailService {
     }
 
     private String createHtmlContent(String name, String emailBody) {
-        // Load your HTML template from a file or use a string template
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
@@ -62,7 +61,7 @@ public class EmailService {
                 "    <div class= 'container mb-3 rounded' style='background-color: #F4DFC8; text-align: center; width: 38%; height: 750px; color: #282828; margin-top: 20px;'>\n" +
                 "        <div class='container mb-3 rounded' style='color: #282828;'>\n" +
                 "            <div style='width: 100%; text-align: center; color: #282828;'>\n" +
-                "                <img src='https://res.cloudinary.com/dyrj7gds0/image/upload/v1724390306/JBArt2_hgsgmk_yfbohp.png' class='me-0' height='300' alt='' class='d-inline-block align-text-top' style='text-align: center; margin-top: 10px;'/>\n" +
+                "                <img src='https://res.cloudinary.com/dyrj7gds0/image/upload/v1724443748/JBArt2_hgsgmk_owhdlq.png' class='me-0' height='300' alt='' class='d-inline-block align-text-top' style='text-align: center; margin-top: 10px;'/>\n" +
                 "            </div>\n" +
                 "            <div style='width: 100%; text-align: center; color: #282828;'>\n" +
                 "                <h1 style='margin-top: 7px; text-align: center;'> ¡Hola " + " " + name + "!</h1>\n" +

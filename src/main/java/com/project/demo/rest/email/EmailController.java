@@ -1,7 +1,6 @@
 package com.project.demo.rest.email;
 
 import com.project.demo.logic.entity.email.EmailDetails;
-import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;

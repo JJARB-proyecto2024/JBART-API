@@ -78,7 +78,6 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    // Constructors
     public User() {}
     @Override
     public boolean isAccountNonExpired() {

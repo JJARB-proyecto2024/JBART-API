@@ -4,8 +4,6 @@ import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.notification.NotificationHandler;
 import com.project.demo.logic.entity.notification.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

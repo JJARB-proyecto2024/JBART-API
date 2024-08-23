@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.rateProduct;
 
-import com.project.demo.logic.entity.rateOrder.RateOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

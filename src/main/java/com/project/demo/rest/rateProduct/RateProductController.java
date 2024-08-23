@@ -5,25 +5,17 @@ import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
-import com.project.demo.logic.entity.rateBrand.RateBrand;
-import com.project.demo.logic.entity.rateBrand.RateBrandRepository;
 import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.rateProduct.RateProductRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.rest.order.OrderController;
 import com.project.demo.rest.userBuyer.UserBuyerRestController;
-import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,23 +66,19 @@ public class RateProductController {
         UserBuyer userBuyer = userBuyerRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("User Buyer not found with id: " + buyerId));
 
-        // Check if the user has already rated this brand
         Optional<RateProduct> existingRating = rateProductRepository.findByIdBuyerAndIdProduct(buyerId, productId);
 
         if (existingRating.isPresent()) {
             throw new IllegalArgumentException("User has already rated this brand.");
         } else {
-            // Check if the user has already rated this brand
             List<Order> existingOrder = orderRepository.findByOrderStatus(buyerId, productId);
             if (!existingOrder.isEmpty()) {
                 rateProduct.setProduct(product);
                 rateProduct.setUserBuyer(userBuyer);
 
                 RateProduct savedRateBrand = rateProductRepository.save(rateProduct);
-
-                // Calcular la calificación promedio y actualizar el UserBrand
                 Integer averageRating = calculateAverageRate(productId);
-                product.setRate(averageRating); // Asegúrate de tener un campo para la calificación promedio en UserBrand
+                product.setRate(averageRating);
                 productRepository.save(product);
 
                 return savedRateBrand;
@@ -106,7 +94,7 @@ public class RateProductController {
             return 0;
         }
         int sum = rates.stream().mapToInt(RateProduct::getRate).sum();
-        return sum / rates.size(); // División entera
+        return sum / rates.size();
     }
 
     @GetMapping("/{id}")

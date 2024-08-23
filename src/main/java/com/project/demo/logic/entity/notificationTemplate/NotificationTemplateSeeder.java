@@ -1,8 +1,5 @@
 package com.project.demo.logic.entity.notificationTemplate;
 
-import com.project.demo.logic.entity.category.Category;
-import com.project.demo.logic.entity.notification.Notification;
-import com.project.demo.logic.entity.rol.Role;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;

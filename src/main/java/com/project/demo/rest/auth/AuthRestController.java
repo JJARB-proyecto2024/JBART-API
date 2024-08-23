@@ -182,7 +182,7 @@ public class AuthRestController {
     }
 
 
-    // Endpoint para generar OTP y enviarlo por correo
+
     @PostMapping("/generatePasswordResetOtp")
     @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
@@ -190,7 +190,7 @@ public class AuthRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
         String otp = String.valueOf(new Random().nextInt(999999));
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10); // Expira en 10 minutos
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10);
 
         Otp otpEntity = new Otp();
         otpEntity.setOtpCode(otp);
@@ -204,18 +204,16 @@ public class AuthRestController {
         return "OTP generado exitosamente y enviado a " + email;
     }
 
-    // Endpoint para validar OTP y actualizar la contraseña
     @PostMapping("/resetPassword")
     @PreAuthorize("permitAll")
     public boolean resetPassword(@RequestBody ValidateOtpRequest request) {
-        String email = request.getEmail(); // Correo electrónico fijo
+        String email = request.getEmail();
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
         boolean result = validateOtp(email, otpCode);
 
         if (result) {
-                // Actualizar la contraseña del usuario
                 User user = userRepository.findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
                 user.setPassword(passwordEncoder.encode(newPassword));
@@ -255,17 +253,13 @@ public class AuthRestController {
             LocalDateTime now = LocalDateTime.now();
 
             if (otp.getExpiryTime().isAfter(now)) {
-                // OTP válido y no expirado, procede con la validación
                 otpRepository.delete(otp);
                 return true;
             } else {
-                // OTP expirado, eliminarlo de la base de datos (opcional)
                 otpRepository.delete(otp);
                 return false;
             }
         }
-
-        // OTP no encontrado
         return false;
     }
 

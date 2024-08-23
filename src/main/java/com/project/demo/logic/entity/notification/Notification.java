@@ -1,10 +1,7 @@
 package com.project.demo.logic.entity.notification;
 
 import com.project.demo.logic.entity.notificationTemplate.NotificationTemplate;
-import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.user.User;
-import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

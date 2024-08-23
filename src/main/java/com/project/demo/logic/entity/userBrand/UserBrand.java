@@ -1,9 +1,7 @@
 package com.project.demo.logic.entity.userBrand;
 
-import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.product.Product;
-import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,7 +61,7 @@ public class UserBrand extends User {
     private List<RateBrand> rateBrand;
 
 
-    // Métodos heredados de User, no es necesario redefinir getEmail() y getPassword()
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -87,7 +85,7 @@ public class UserBrand extends User {
 
     @Override
     public String getUsername() {
-        return getEmail(); // Utiliza el método getEmail() heredado
+        return getEmail();
     }
 
     public Long getId() {
@@ -156,12 +154,12 @@ public class UserBrand extends User {
 
     @Override
     public void setEmail(String email) {
-        super.setEmail(email); // Llama al método setEmail() de la clase User
+        super.setEmail(email);
     }
 
     @Override
     public void setPassword(String password) {
-        super.setPassword(password); // Llama al método setPassword() de la clase User
+        super.setPassword(password);
     }
 
     @Override

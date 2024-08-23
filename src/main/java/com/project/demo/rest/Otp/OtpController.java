@@ -22,7 +22,6 @@ public class OtpController {
         return otpService.validateOtp(email,otp);
     }
 
-    // Método para limpiar OTPs expirados al iniciar la aplicación
     @PostConstruct
     public void cleanExpiredOtpsOnStartup() {
         otpService.cleanExpiredOtps();

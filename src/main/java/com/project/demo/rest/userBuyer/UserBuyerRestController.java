@@ -3,10 +3,8 @@ package com.project.demo.rest.userBuyer;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
-import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
-import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
-import com.project.demo.logic.entity.rol.RoleRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usersBuyer")

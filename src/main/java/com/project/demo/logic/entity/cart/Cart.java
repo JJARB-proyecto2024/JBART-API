@@ -1,7 +1,6 @@
 package com.project.demo.logic.entity.cart;
 
-import com.project.demo.logic.entity.category.Category;
-import com.project.demo.logic.entity.product.Product;
+import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import jakarta.persistence.*;
@@ -19,8 +18,8 @@ public class Cart {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "design_id", referencedColumnName = "id", nullable = false)
+    private Design design;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_buyer_id", referencedColumnName = "id", nullable = false)
@@ -46,12 +45,12 @@ public class Cart {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public Design getDesign() {
+        return design;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDesign(Design design) {
+        this.design = design;
     }
 
     public User getUserBuyer() {

@@ -1,7 +1,6 @@
 package com.project.demo.logic.entity.order;
 
 import com.project.demo.logic.entity.rateOrder.RateOrder;
-import com.project.demo.logic.entity.rateProduct.RateProduct;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.product.Product;
 import jakarta.persistence.*;
@@ -29,6 +28,8 @@ public class Order {
     private String status;
     private String deliveryLocation;
     private String currentLocation;
+    @Column(name = "rate", nullable = true)
+    private Integer rate;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<RateOrder> rateOrder;
@@ -128,4 +129,12 @@ public class Order {
     public Date getUpdatedAt() {return updatedAt;}
 
     public void setUpdatedAt(Date updatedAt) {this.updatedAt = updatedAt;}
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
 }

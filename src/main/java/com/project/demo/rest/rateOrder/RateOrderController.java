@@ -2,16 +2,11 @@ package com.project.demo.rest.rateOrder;
 
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
-import com.project.demo.logic.entity.rateBrand.RateBrand;
-import com.project.demo.logic.entity.rateBrand.RateBrandRepository;
 import com.project.demo.logic.entity.rateOrder.RateOrder;
 import com.project.demo.logic.entity.rateOrder.RateOrderRepository;
-import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.rest.order.OrderController;
-import com.project.demo.rest.userBrand.UserBrandRestController;
 import com.project.demo.rest.userBuyer.UserBuyerRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,8 +48,8 @@ public class RateOrderController {
     @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN')")
     public RateOrder addRateOrder(@RequestBody RateOrder rateOrder) {
 
-        if (rateOrder == null || rateOrder.getRate() == null || rateOrder.getOrder().getId() == null) {
-            throw new IllegalArgumentException("RateBrand or order cannot be null");
+        if (rateOrder.getRate() == null || rateOrder.getOrder().getId() == null) {
+            throw new IllegalArgumentException("RateOrder or order cannot be null");
         }
 
         Long orderId = rateOrder.getOrder().getId();
@@ -63,21 +58,30 @@ public class RateOrderController {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
 
-
         UserBuyer userBuyer = userBuyerRepository.findById(buyerId)
                 .orElseThrow(() -> new IllegalArgumentException("User Buyer not found with id: " + buyerId));
 
-        // Check if the user has already rated this brand
+        // Check if the user has already rated this RateOrder
         Optional<RateOrder> existingRating = rateOrderRepository.findByIdBuyerAndOrderId(buyerId, orderId);
 
         if (existingRating.isPresent()) {
-            throw new IllegalArgumentException("User has already rated this order.");
+            throw new IllegalArgumentException("User has already rated this RateOrder.");
         } else {
             rateOrder.setOrder(order);
             rateOrder.setUserBuyer(userBuyer);
 
             return rateOrderRepository.save(rateOrder);
         }
+    }
+
+
+    private Integer calculateAverageRate(Long orderId) {
+        List<RateOrder> rates = rateOrderRepository.findByOrderId(orderId);
+        if (rates.isEmpty()) {
+            return 0;
+        }
+        int sum = rates.stream().mapToInt(RateOrder::getRate).sum();
+        return sum / rates.size();
     }
 
     @GetMapping("/{id}")

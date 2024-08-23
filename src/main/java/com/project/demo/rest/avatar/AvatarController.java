@@ -2,7 +2,6 @@ package com.project.demo.rest.avatar;
 
 import com.project.demo.logic.entity.avatar.Avatar;
 import com.project.demo.logic.entity.avatar.AvatarRepository;
-import com.project.demo.logic.entity.rateBrand.RateBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
 import com.project.demo.rest.userBuyer.UserBuyerRestController;

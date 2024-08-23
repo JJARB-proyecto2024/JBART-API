@@ -116,11 +116,11 @@ public class UserBrandRestController {
                         String emailBody = "¡Hola " + name + "!\n\n" +
                                 "Tu cuenta ha sido activada correctamente.";
 
-                        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+                        sendStatusUpdateEmail(name, emailBody);
                     } else {
                         String emailBody = "¡Hola " + name + "!\n\n" +
                                 "Tu cuenta ha sido desactivada.";
-                        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+                        sendStatusUpdateEmail(name, emailBody);
                     }
 
                     return UserBrandRepository.save(existingUser);
@@ -137,7 +137,6 @@ public class UserBrandRestController {
             emailService.sendEmail(emailDetails);
             System.out.println("El correo se envio con exito.");
         } catch (IOException e) {
-            // Manejo de errores al enviar el correo
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
     }
@@ -163,7 +162,7 @@ public class UserBrandRestController {
         String emailBody = "¡Hola " + name + "!\n\n" +
                 "Lamentablemente, tu solicitud ha sido rechazada.";
 
-        sendStatusUpdateEmail(name, emailBody); // Método para enviar el correo
+        sendStatusUpdateEmail(name, emailBody);
 
     }
 

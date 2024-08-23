@@ -15,7 +15,6 @@ import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
-import com.project.demo.rest.notification.NotificationController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
