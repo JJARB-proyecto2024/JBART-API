@@ -15,6 +15,8 @@ import com.project.demo.logic.entity.paypal.PaymentRequest;
 import com.project.demo.logic.entity.paypal.PaypalService;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
+import com.project.demo.logic.entity.property.Property;
+import com.project.demo.logic.entity.property.PropertyRepository;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -56,6 +58,9 @@ public class AuthRestController {
 
     @Autowired
     private UserBrandRepository userBrandRepository;
+
+    @Autowired
+    private PropertyRepository propertyRepository;
 
     @Autowired
     private EmailService emailService;
@@ -148,7 +153,13 @@ public class AuthRestController {
     }
 
     private EmailDetails createEmailDetails(String name, String emailBody) {
-        String email = "robertaraya382@gmail.com";
+        // Recuperar la propiedad "Correo Sendgrid" usando Optional
+        Property property = propertyRepository.findByName("Correo Sendgrid")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+
+        // Obtener el parámetro (email) de la propiedad
+        String email = property.getParameter();
+
         return new EmailDetails(new EmailInfo("JBart", email), new EmailInfo(name, email), "Actualización de Estado", emailBody);
     }
 
@@ -258,21 +269,25 @@ public class AuthRestController {
         return false;
     }
 
-    // Método para enviar correo electrónico con el OTP de recuperación de contraseña
     private void sendPasswordResetOtpEmail(String otp) {
-        String email = "robertaraya382@gmail.com";
-        String subject = "Recuperación de contraseña - Código de verificación";
+        Property propertyEmail = propertyRepository.findByName("Correo Sendgrid")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+        String email = propertyEmail.getParameter();
+
+        Property propertySubject = propertyRepository.findByName("Asunto Recuperacion")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+        String subject = propertySubject.getParameter();
+
         String emailBody = "Tu código de verificación para recuperación de contraseña es: " + otp + "\n Este código expira en 10 minutos.";
         EmailDetails emailDetails = createEmailDetails(emailBody);
         try {
             emailService.sendEmail(emailDetails);
-            System.out.println("Correo electrónico con OTP de recuperación de contraseña enviado con éxito.");
         } catch (IOException e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
     }
 
-    @Scheduled(fixedRate = 60000) // Ejecutar cada 1 minuto (ajustar según necesidad)
+    @Scheduled(fixedRate = 60000)
     public void cleanExpiredOtps() {
         LocalDateTime now = LocalDateTime.now();
         List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);
@@ -280,11 +295,15 @@ public class AuthRestController {
         System.out.println("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
     }
 
-    // Método para crear detalles de correo electrónico
     private EmailDetails createEmailDetails(String emailBody) {
-        EmailInfo fromAddress = new EmailInfo("JBart", "robertaraya382@gmail.com"); // Ajustar según tu configuración
-        EmailInfo toAddress = new EmailInfo("Usuario", "robertaraya382@gmail.com");
-        String subject = "Recuperación de contraseña - Código de verificación";
+        Property property = propertyRepository.findByName("Correo Sendgrid")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+        String email = property.getParameter();
+        EmailInfo fromAddress = new EmailInfo("JBart", email);
+        EmailInfo toAddress = new EmailInfo("Usuario", email);
+        Property propertySubject = propertyRepository.findByName("Asunto Recuperacion")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+        String subject = propertySubject.getParameter();
 
         return new EmailDetails(fromAddress, toAddress, subject, emailBody);
     }
