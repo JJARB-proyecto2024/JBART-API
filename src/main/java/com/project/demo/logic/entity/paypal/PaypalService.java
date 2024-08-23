@@ -3,6 +3,8 @@ package com.project.demo.logic.entity.paypal;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import com.project.demo.logic.entity.design.Design;
+import com.project.demo.logic.entity.design.DesignRepository;
 import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.notification.NotificationHandler;
 import com.project.demo.logic.entity.notification.NotificationRepository;
@@ -12,10 +14,8 @@ import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
-import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
-import com.project.demo.rest.notification.NotificationController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,8 @@ public class PaypalService {
     private OrderRepository orderRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private DesignRepository designRepository;
     @Autowired
     private UserBuyerRepository userBuyerRepository;
     @Autowired
@@ -112,7 +114,7 @@ public class PaypalService {
         for (ItemDto itemDto : items) {
             Order order = new Order();
             order.setUserBuyer(userBuyer);
-            order.setProduct(getProductFromItemDto(itemDto));
+            order.setDesign(getDesignFromItemDto(itemDto));
             order.setQuantity(itemDto.getQuantity());
             order.setSubtotal(subtotal);
             order.setShippingCost(shipping);
@@ -140,15 +142,14 @@ public class PaypalService {
         }
     }
 
-    private Product getProductFromItemDto(ItemDto itemDto) {
-        return productRepository.findByName(itemDto.getName())
+    private Design getDesignFromItemDto(ItemDto itemDto) {
+        return designRepository.findById(itemDto.getId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    private UserBrand getProductBrandFromItemDto(ItemDto itemDto) {
+    private Product getProductFromItemDto(ItemDto itemDto) {
         return productRepository.findByName(itemDto.getName())
-                .orElseThrow(() -> new RuntimeException("Product not found"))
-                .getUserBrand();
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
