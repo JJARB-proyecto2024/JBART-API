@@ -1,5 +1,8 @@
 package com.project.demo.rest.order;
 
+import com.project.demo.logic.entity.avatar.Avatar;
+import com.project.demo.logic.entity.design.Design;
+import com.project.demo.logic.entity.design.DesignRepository;
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
 import com.project.demo.logic.entity.product.Product;
@@ -33,6 +36,8 @@ public class OrderController {
 
     @Autowired
     private UserBuyerRestController userBuyerRestController;
+    @Autowired
+    private DesignRepository designRepository;
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
@@ -76,12 +81,12 @@ public class OrderController {
                         }
                     }
 
-                    if (order.getProduct() != null && order.getProduct().getId() != null) {
-                        Optional<Product> product = productRepository.findById(order.getProduct().getId());
-                        if (product.isPresent()) {
-                            existingOrder.setProduct(product.get());
+                    if (order.getDesign() != null && order.getDesign().getId() != null) {
+                        Optional<Design> design = designRepository.findById(order.getDesign().getId());
+                        if (design.isPresent()) {
+                            existingOrder.setDesign(design.get());
                         } else {
-                            throw new RuntimeException("Product not found with id: " + order.getProduct().getId());
+                            throw new RuntimeException("Product not found with id: " + order.getDesign().getId());
                         }
                     }
 

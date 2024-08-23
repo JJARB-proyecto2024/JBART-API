@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.order;
 
+import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.rateOrder.RateOrder;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.product.Product;
@@ -19,8 +20,8 @@ public class Order {
     @JoinColumn(name = "user_buyer_id")
     private UserBuyer userBuyer;
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "design_id")
+    private Design design;
     private Integer quantity;
     private Double subtotal;
     private Double shippingCost;
@@ -58,12 +59,12 @@ public class Order {
         this.userBuyer = userBuyer;
     }
 
-    public Product getProduct() {
-        return product;
+    public Design getDesign() {
+        return design;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDesign(Design design) {
+        this.design = design;
     }
 
     public Integer getQuantity() {
