@@ -22,7 +22,7 @@ public class CartController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public Cart addNotification(@RequestBody Cart cart) {
+    public Cart addCart(@RequestBody Cart cart) {
         return cartRepository.save(cart);
     }
 
