@@ -28,6 +28,9 @@ public class Design {
     @Column(name = "modified_model", nullable = false)
     private String modifiedModel;
 
+    @Column(name = "selected_size", nullable = false)
+    private String selectedSize;
+
     @OneToMany(mappedBy = "design", fetch = FetchType.LAZY)
     private List<Cart> carts;
 
@@ -73,6 +76,14 @@ public class Design {
 
     public void setModifiedModel(String modifiedModel) {
         this.modifiedModel = modifiedModel;
+    }
+
+    public String getSelectedSize() {
+        return selectedSize;
+    }
+
+    public void setSelectedSize(String selectedSize) {
+        this.selectedSize = selectedSize;
     }
 
     public UserBuyer getUserBuyer() {
