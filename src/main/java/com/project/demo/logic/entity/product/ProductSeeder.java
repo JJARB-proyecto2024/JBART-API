@@ -41,7 +41,17 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        createProducts();
+        SeedProductsIfNeeded();
+    }
+
+    private void SeedProductsIfNeeded() {
+        if (productRepository.count() == 0) {
+            System.out.println("CREATING PRODUCTS");
+            createProducts();
+        } else {
+            System.out.println("PRODUCTS SEEDING ON THE DATABASE");
+
+        }
     }
 
     private void createProducts() {
