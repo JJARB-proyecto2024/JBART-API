@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.rol;
 
+import com.project.demo.logic.entity.enums.RoleEnum;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

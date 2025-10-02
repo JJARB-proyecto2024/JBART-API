@@ -1,6 +1,7 @@
 package com.project.demo.logic.entity.rol;
 
 import com.project.demo.logic.entity.category.CategoryRepository;
+import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.context.ApplicationListener;

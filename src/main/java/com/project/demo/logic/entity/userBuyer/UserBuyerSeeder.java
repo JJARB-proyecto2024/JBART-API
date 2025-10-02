@@ -1,8 +1,9 @@
 package com.project.demo.logic.entity.userBuyer;
 
 import com.project.demo.logic.entity.category.CategoryRepository;
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
-import com.project.demo.logic.entity.rol.RoleEnum;
+import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
@@ -36,7 +37,16 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        createUserBuyers();
+        seedIfUsers();
+    }
+
+    private void seedIfUsers() {
+        if (userRepository.count() == 0) {
+            createUserBuyers();
+            System.out.println("CREATING USERS BUYER");
+        } else {
+            System.out.println("USERS BUYER SEEDING ON THE DATABASE");
+        }
     }
 
     private void createUserBuyers() {
@@ -70,7 +80,7 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode((String) userData[4]));
         user.setRole(optionalRole.get());
-        user.setStatus("Activo");
+        user.setStatus(StatusEnum.ACTIVE);
         userRepository.save(user);
     }
 

@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.user;
 
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.notification.Notification;
 import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.rol.Role;
@@ -27,24 +28,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String status;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
 
     private String name;
     private String lastname;
@@ -69,14 +54,6 @@ public class User implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public User() {}
     @Override
@@ -128,6 +105,30 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEnum status) {
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public Date getCreatedAt() {

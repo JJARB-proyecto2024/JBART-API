@@ -1,5 +1,6 @@
 package com.project.demo.logic.entity.rol;
 
+import com.project.demo.logic.entity.enums.RoleEnum;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

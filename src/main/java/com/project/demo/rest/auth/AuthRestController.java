@@ -18,7 +18,7 @@ import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.property.Property;
 import com.project.demo.logic.entity.property.PropertyRepository;
 import com.project.demo.logic.entity.rol.Role;
-import com.project.demo.logic.entity.rol.RoleEnum;
+import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;

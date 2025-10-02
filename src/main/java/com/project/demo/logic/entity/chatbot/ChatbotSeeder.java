@@ -1,19 +1,9 @@
 package com.project.demo.logic.entity.chatbot;
 
-import com.project.demo.logic.entity.category.CategoryRepository;
-import com.project.demo.logic.entity.rol.Role;
-import com.project.demo.logic.entity.rol.RoleEnum;
-import com.project.demo.logic.entity.rol.RoleRepository;
-import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Component
