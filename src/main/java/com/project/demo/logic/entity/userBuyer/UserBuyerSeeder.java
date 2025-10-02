@@ -19,6 +19,7 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final UserBuyerRepository userBuyerRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final CategoryRepository categoryRepository;
@@ -26,11 +27,12 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
 
     public UserBuyerSeeder(
             RoleRepository roleRepository,
-            UserRepository userRepository,
+            UserRepository userRepository, UserBuyerRepository userBuyerRepository,
             PasswordEncoder passwordEncoder,
             CategoryRepository categoryRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.userBuyerRepository = userBuyerRepository;
         this.passwordEncoder = passwordEncoder;
         this.categoryRepository = categoryRepository;
     }
@@ -41,7 +43,7 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
     }
 
     private void seedIfUsers() {
-        if (userRepository.count() == 0) {
+        if (userBuyerRepository.count() == 0) {
             createUserBuyers();
             System.out.println("CREATING USERS BUYER");
         } else {

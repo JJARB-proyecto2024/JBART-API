@@ -1,5 +1,6 @@
 package com.project.demo.rest.userBuyer;
 
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -47,7 +48,7 @@ public class UserBuyerRestController {
         }
         user.setRole(optionalRole.get());
 
-        user.setStatus("Activo");
+        user.setStatus(StatusEnum.ACTIVE);
 
         return UserBuyerRepository.save(user);
     }
@@ -97,7 +98,7 @@ public class UserBuyerRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Contraseña incorrecta.");
         }
 
-        userResult.setStatus("Inactivo");
+        userResult.setStatus(StatusEnum.INACTIVE);
         UserBuyerRepository.save(userResult);
 
         return ResponseEntity.ok("Cuenta desactivada con éxito.");

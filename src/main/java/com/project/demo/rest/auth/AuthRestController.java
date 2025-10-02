@@ -10,6 +10,7 @@ import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
 import com.project.demo.logic.entity.paypal.PaymentRequest;
 import com.project.demo.logic.entity.paypal.PaypalService;
@@ -91,7 +92,7 @@ public class AuthRestController {
         try {
             User authenticatedUser = authenticationService.authenticate(user);
 
-            if (!"Activo".equals(authenticatedUser.getStatus())) {
+            if (!StatusEnum.ACTIVE.equals(authenticatedUser.getStatus())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new LoginResponse("Cuenta inactiva. Por favor, ve al enlace de activación de cuenta."));
             }
 
@@ -122,7 +123,7 @@ public class AuthRestController {
         Role role = roleRepository.findByName(RoleEnum.USER_BRAND)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
         userBrand.setRole(role);
-        userBrand.setStatus("Inactivo");
+        userBrand.setStatus(StatusEnum.INACTIVE);
 
         sendStatusUpdateEmail(userBrand.getBrandName(), buildEmailBody(userBrand.getBrandName()));
 
@@ -163,7 +164,7 @@ public class AuthRestController {
             return null;
         }
         userBuyer.setRole(optionalRole.get());
-        userBuyer.setStatus("Activo");
+        userBuyer.setStatus(StatusEnum.ACTIVE);
         UserBuyer savedUser = userRepository.save(userBuyer);
         return ResponseEntity.ok(savedUser);
     }
@@ -224,7 +225,7 @@ public class AuthRestController {
         if (result) {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado para el email: " + email));
-            user.setStatus("Activo");
+            user.setStatus(StatusEnum.ACTIVE);
             userRepository.save(user);
             return true;
         } else {

@@ -3,6 +3,7 @@ package com.project.demo.rest.userBrand;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
@@ -57,7 +58,7 @@ public class UserBrandRestController {
         }
         user.setRole(optionalRole.get());
 
-        user.setStatus("Inactivo");
+        user.setStatus(StatusEnum.INACTIVE);
 
         return UserBrandRepository.save(user);
     }
