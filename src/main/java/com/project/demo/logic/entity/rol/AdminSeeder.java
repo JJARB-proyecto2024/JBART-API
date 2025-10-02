@@ -2,6 +2,7 @@ package com.project.demo.logic.entity.rol;
 
 import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.enums.RoleEnum;
+import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import org.springframework.context.ApplicationListener;
@@ -42,7 +43,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         superAdmin.setLastname("Admin");
         superAdmin.setEmail("super.admin@gmail.com");
         superAdmin.setPassword("superadmin123");
-        superAdmin.setStatus("Activo");
+        superAdmin.setStatus(StatusEnum.ACTIVE);
 
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.SUPER_ADMIN);
         Optional<User> optionalUser = userRepository.findByEmail(superAdmin.getEmail());
@@ -57,7 +58,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         user.setEmail(superAdmin.getEmail());
         user.setPassword(passwordEncoder.encode(superAdmin.getPassword()));
         user.setRole(optionalRole.get());
-        user.setStatus("Activo");
+        user.setStatus(StatusEnum.ACTIVE);
 
         userRepository.save(user);
     }
