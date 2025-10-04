@@ -1,9 +1,9 @@
 package com.project.demo.logic.entity.userBrand;
 
 import com.project.demo.logic.entity.category.CategoryRepository;
+import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
-import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

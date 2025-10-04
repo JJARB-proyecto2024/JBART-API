@@ -1,19 +1,20 @@
 package com.project.demo.rest.userBuyer;
 
+import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
-import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 

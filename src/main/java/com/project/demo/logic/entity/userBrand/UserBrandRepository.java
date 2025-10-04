@@ -13,11 +13,11 @@ public interface UserBrandRepository extends JpaRepository<UserBrand, Long> {
     Optional<UserBrand> findByName(String name);
     Optional<UserBrand> findByEmail(String email);
     @Query(
-            "SELECT u FROM UserBrand u WHERE u.status = 'Inactivo'"
+            "SELECT u FROM UserBrand u WHERE u.status = 'INACTIVE'"
     )
     List<UserBrand> findUserBrandByStatusInactive ();
     @Query(
-            "SELECT u FROM UserBrand u WHERE u.status = 'Activo'"
+            "SELECT u FROM UserBrand u WHERE u.status = 'ACTIVE'"
     )
     List<UserBrand> findUserBrandByStatusActive ();
 }
