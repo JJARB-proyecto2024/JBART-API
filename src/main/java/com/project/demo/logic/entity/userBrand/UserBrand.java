@@ -19,8 +19,8 @@ public class UserBrand extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "legal_id", nullable = false, unique = true, length = 9)
-    private Long legalId;
+    @Column(name = "legal_id", nullable = false, unique = true, length = 20)
+    private String legalId;
 
     @Column(name = "logo_type", nullable = false)
     private String logoType;
@@ -96,11 +96,11 @@ public class UserBrand extends User {
         this.id = id;
     }
 
-    public Long getLegalId() {
+    public String getLegalId() {
         return legalId;
     }
 
-    public void setLegalId(Long legalId) {
+    public void setLegalId(String legalId) {
         this.legalId = legalId;
     }
 

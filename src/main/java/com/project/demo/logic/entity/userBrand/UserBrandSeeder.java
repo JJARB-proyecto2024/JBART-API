@@ -77,7 +77,7 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
         }
 
         UserBrand user = new UserBrand();
-        user.setLegalId(Long.parseLong((String) userBrandData[0]));
+        user.setLegalId((String) userBrandData[0]);
         user.setLogoType((String) userBrandData[1]);
         user.setLegalDocuments((String) userBrandData[2]);
         user.setBrandName((String) userBrandData[3]);
