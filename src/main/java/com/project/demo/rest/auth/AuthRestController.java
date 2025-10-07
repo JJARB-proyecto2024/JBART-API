@@ -1,7 +1,5 @@
 package com.project.demo.rest.auth;
 
-import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 import com.project.demo.logic.entity.Otp.Otp;
 import com.project.demo.logic.entity.Otp.OtpRepository;
 import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
@@ -12,11 +10,6 @@ import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
-import com.project.demo.logic.entity.paypal.ExecutePaymentDto;
-import com.project.demo.logic.entity.paypal.PaymentRequest;
-import com.project.demo.logic.entity.paypal.PaypalService;
-import com.project.demo.logic.entity.product.Product;
-import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.property.Property;
 import com.project.demo.logic.entity.property.PropertyRepository;
 import com.project.demo.logic.entity.rol.Role;
@@ -25,67 +18,49 @@ import com.project.demo.logic.entity.user.LoginResponse;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
-import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
-import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @RequestMapping("/auth")
 @RestController
 public class AuthRestController {
 
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserBrandRepository userBrandRepository;
-
-    @Autowired
-    private PropertyRepository propertyRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private OtpRepository otpRepository;
-
-    @Autowired
-    private PaypalService paypalService;
-
-    @Autowired
-    private UserBuyerRepository userBuyerRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-    
-
+    private final  UserRepository userRepository;
+    private final  PasswordEncoder passwordEncoder;
+    private final  RoleRepository roleRepository;
+    private final  PropertyRepository propertyRepository;
+    private final  EmailService emailService;
+    private final  OtpRepository otpRepository;
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
 
-    public AuthRestController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
+    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.propertyRepository = propertyRepository;
+        this.emailService = emailService;
+        this.otpRepository = otpRepository;
         this.authenticationService = authenticationService;
+        this.jwtService = jwtService;
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody User user) {
@@ -288,56 +263,6 @@ public class AuthRestController {
         String subject = propertySubject.getParameter();
 
         return new EmailDetails(fromAddress, toAddress, subject, emailBody);
-    }
-
-    @PostMapping("/createPayment")
-    public ResponseEntity<?> createPayment(@RequestBody PaymentRequest paymentRequest, @RequestHeader("host") String host) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserBuyer currentUser = (UserBuyer) authentication.getPrincipal();
-            Long userId = currentUser.getId();
-
-            Payment payment = paypalService.createPayment(paymentRequest.getItems(), "http://" + host, userId, paymentRequest.getCurrency());
-            String approvalLink = payment.getLinks().stream()
-                    .filter(link -> "approval_url".equals(link.getRel()))
-                    .findFirst()
-                    .map(link -> link.getHref())
-                    .orElseThrow(() -> new RuntimeException("Approval URL not found"));
-
-            Map<String, String> response = new HashMap<>();
-            response.put("id", payment.getId());
-            response.put("token", approvalLink.substring(approvalLink.indexOf("token=") + 6));
-
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (PayPalRESTException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(Collections.singletonMap("error", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-
-
-    @PostMapping("/executePayment")
-    public ResponseEntity<?> executePayment(@RequestBody ExecutePaymentDto dto) {
-        try {
-            return new ResponseEntity<>(paypalService.executePayment(dto.getPaymentId(), dto.getPayerId()), HttpStatus.OK);
-        } catch (PayPalRESTException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Error executing payment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/brands")
-    @PreAuthorize("permitAll")
-    public List<UserBrand> getAllBrandActive() {
-        return userBrandRepository.findUserBrandByStatusActive();
-    }
-
-    @GetMapping("/products")
-    @PreAuthorize("permitAll")
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
     }
 
 }

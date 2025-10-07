@@ -8,7 +8,6 @@ import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,17 +23,18 @@ import java.util.Random;
 @RestController
 @RequestMapping("/users")
 public class UserRestController {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final OtpRepository otpRepository;
+    private final EmailService emailService;
 
-    @Autowired
-    private OtpRepository otpRepository;
-
-    @Autowired
-    private EmailService emailService;
+    public UserRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, OtpRepository otpRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.otpRepository = otpRepository;
+        this.emailService = emailService;
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")

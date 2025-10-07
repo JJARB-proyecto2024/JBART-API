@@ -9,7 +9,6 @@ import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,17 +22,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usersBrand")
 public class UserBrandRestController {
-    @Autowired
-    private UserBrandRepository UserBrandRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final  UserBrandRepository UserBrandRepository;
+    private final  PasswordEncoder passwordEncoder;
+    private final  RoleRepository roleRepository;
+    private final  EmailService emailService;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private EmailService emailService;
+    public UserBrandRestController(UserBrandRepository userBrandRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, EmailService emailService) {
+        UserBrandRepository = userBrandRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.emailService = emailService;
+    }
 
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")

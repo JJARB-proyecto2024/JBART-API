@@ -6,7 +6,6 @@ import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import com.project.demo.logic.entity.userBuyer.UserBuyerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,14 +22,15 @@ import java.util.Optional;
 @RequestMapping("/usersBuyer")
 public class UserBuyerRestController {
 
-    @Autowired
-    private UserBuyerRepository UserBuyerRepository;
+    private final UserBuyerRepository UserBuyerRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserBuyerRestController(UserBuyerRepository userBuyerRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+        UserBuyerRepository = userBuyerRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")

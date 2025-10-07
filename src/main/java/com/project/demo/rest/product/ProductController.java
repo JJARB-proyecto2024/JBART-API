@@ -6,9 +6,7 @@ import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.rest.userBrand.UserBrandRestController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +15,15 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final  ProductRepository productRepository;
+    private final  CategoryRepository categoryRepository;
+    private final  UserBrandRestController userBrandRestController;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private UserBrandRestController userBrandRestController;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, UserBrandRestController userBrandRestController) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.userBrandRestController = userBrandRestController;
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('USER_BRAND','SUPER_ADMIN', 'USER')")
