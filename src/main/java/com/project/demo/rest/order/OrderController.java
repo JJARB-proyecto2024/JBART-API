@@ -1,11 +1,9 @@
 package com.project.demo.rest.order;
 
-import com.project.demo.logic.entity.avatar.Avatar;
 import com.project.demo.logic.entity.design.Design;
 import com.project.demo.logic.entity.design.DesignRepository;
 import com.project.demo.logic.entity.order.Order;
 import com.project.demo.logic.entity.order.OrderRepository;
-import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.user.User;
 import com.project.demo.logic.entity.userBrand.UserBrand;

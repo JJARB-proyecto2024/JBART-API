@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.userBrand;
 
-import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
@@ -18,18 +17,14 @@ public class UserBrandSeeder implements ApplicationListener<ContextRefreshedEven
     private final UserBrandRepository userBrandRepository;
 
     private final PasswordEncoder passwordEncoder;
-    private final CategoryRepository categoryRepository;
-
 
     public UserBrandSeeder(
             RoleRepository roleRepository,
             UserBrandRepository userBrandRepository,
-            PasswordEncoder passwordEncoder,
-            CategoryRepository categoryRepository) {
+            PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userBrandRepository = userBrandRepository;
         this.passwordEncoder = passwordEncoder;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override

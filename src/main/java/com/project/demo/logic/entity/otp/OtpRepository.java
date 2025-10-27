@@ -1,4 +1,4 @@
-package com.project.demo.logic.entity.Otp;
+package com.project.demo.logic.entity.otp;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

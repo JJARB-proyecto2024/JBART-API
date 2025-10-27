@@ -1,9 +1,10 @@
-package com.project.demo.logic.entity.Otp;
+package com.project.demo.logic.entity.otp;
 
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.demo.logic.entity.property.Property;
+import com.project.demo.logic.entity.property.PropertyRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.logging.Logger;
 
 @Service
 public class OtpService {
 
-    @Autowired
-    private OtpRepository otpRepository;
-    @Autowired
-    private EmailService emailService;
+    private final OtpRepository otpRepository;
+    private final EmailService emailService;
+    private final PropertyRepository propertyRepository;
+    private final Random random = new Random();
+
+    Logger logger = Logger.getLogger(OtpService.class.getName());
+
+    public OtpService(OtpRepository otpRepository, EmailService emailService, PropertyRepository propertyRepository) {
+        this.otpRepository = otpRepository;
+        this.emailService = emailService;
+        this.propertyRepository = propertyRepository;
+    }
 
     public String generateOtp() {
         String email = "robertaraya382@gmail.com";
-        String otp = String.valueOf(new Random().nextInt(999999));
+        String otp = String.valueOf(random.nextInt(999999));
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
 
         Otp otpEntity = new Otp();
@@ -61,19 +71,22 @@ public class OtpService {
         LocalDateTime now = LocalDateTime.now();
         List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);
         otpRepository.deleteAll(expiredOtps);
-        System.out.println("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
+        logger.info("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
     }
 
     private void sendOtpEmail(String email, String otp) {
-        String subject = "Codigo de verificacion";
         String emailBody = "Tu codigo de verificacion es: " + otp + "\n Este codigo expira en 10 minutos.";
         EmailDetails emailDetails = createEmailDetails(email, emailBody);
         try {
             emailService.sendEmail(emailDetails);
-            System.out.println("El correo se envio con exito.");
+            logger.info("El correo se envio con exito.");
         } catch (IOException e) {
-            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
+            logger.info("Error al enviar el correo electrónico: " + e.getMessage());
         }
+    }
+
+    public void sendPasswordResetByEmail(String email) {
+        sendPasswordResetOtpEmail(email);
     }
 
     private EmailDetails createEmailDetails(String email, String emailBody) {
@@ -82,5 +95,19 @@ public class OtpService {
         String subject = "Codigo de verificacion";
 
         return new EmailDetails(fromAddress, toAddress, subject, emailBody);
+    }
+
+    private void sendPasswordResetOtpEmail(String otp) {
+        Property propertyEmail = propertyRepository.findByName("Correo Sendgrid")
+                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
+        String email = propertyEmail.getParameter();
+
+        String emailBody = "Tu código de verificación para recuperación de contraseña es: " + otp + "\n Este código expira en 10 minutos.";
+        EmailDetails emailDetails = createEmailDetails(email, emailBody);
+        try {
+            emailService.sendEmail(emailDetails);
+        } catch (IOException e) {
+            logger.info("Error al enviar el correo electrónico: " + e.getMessage());
+        }
     }
 }

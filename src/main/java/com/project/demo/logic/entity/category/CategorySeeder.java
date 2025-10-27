@@ -18,7 +18,16 @@ public class CategorySeeder implements ApplicationListener<ContextRefreshedEvent
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        this.loadCategories();
+        this.isCategoryExistInDB();
+    }
+
+    private void isCategoryExistInDB() {
+        if (categoryRepository.count() == 0) {
+            System.out.println("CREATING CATEGORIES");
+            loadCategories();
+        }else {
+            System.out.println("CATEGORY EXIST IN DB");
+        }
     }
 
     private void loadCategories() {

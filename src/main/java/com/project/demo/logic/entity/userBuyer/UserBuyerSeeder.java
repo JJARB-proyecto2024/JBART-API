@@ -1,6 +1,5 @@
 package com.project.demo.logic.entity.userBuyer;
 
-import com.project.demo.logic.entity.category.CategoryRepository;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
 import com.project.demo.logic.entity.rol.Role;
@@ -22,19 +21,16 @@ public class UserBuyerSeeder implements ApplicationListener<ContextRefreshedEven
     private final UserBuyerRepository userBuyerRepository;
 
     private final PasswordEncoder passwordEncoder;
-    private final CategoryRepository categoryRepository;
 
 
     public UserBuyerSeeder(
             RoleRepository roleRepository,
             UserRepository userRepository, UserBuyerRepository userBuyerRepository,
-            PasswordEncoder passwordEncoder,
-            CategoryRepository categoryRepository) {
+            PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.userBuyerRepository = userBuyerRepository;
         this.passwordEncoder = passwordEncoder;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override

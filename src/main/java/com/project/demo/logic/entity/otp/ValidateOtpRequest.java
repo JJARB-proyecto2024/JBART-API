@@ -1,4 +1,4 @@
-package com.project.demo.logic.entity.Otp;
+package com.project.demo.logic.entity.otp;
 
 public class ValidateOtpRequest {
     private String otpCode;

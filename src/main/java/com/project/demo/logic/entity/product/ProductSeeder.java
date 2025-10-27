@@ -1,21 +1,14 @@
 package com.project.demo.logic.entity.product;
 
 import com.project.demo.logic.entity.category.CategoryRepository;
-import com.project.demo.logic.entity.rol.RoleRepository;
-import com.project.demo.logic.entity.user.UserRepository;
 import com.project.demo.logic.entity.userBrand.UserBrandRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
     private final CategoryRepository categoryRepository;
 
     private final ProductRepository productRepository;
@@ -25,15 +18,9 @@ public class ProductSeeder implements ApplicationListener<ContextRefreshedEvent>
 
 
     public ProductSeeder(
-            RoleRepository roleRepository,
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
             CategoryRepository categoryRepository,
             ProductRepository productRepository,
             UserBrandRepository userBrandRepository) {
-        this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
         this.userBrandRepository = userBrandRepository;

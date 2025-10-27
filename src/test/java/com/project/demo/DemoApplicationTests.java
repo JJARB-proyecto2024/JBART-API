@@ -1,6 +1,6 @@
 package com.project.demo;
 
-import com.project.demo.logic.entity.Otp.OtpRepository;
+import com.project.demo.logic.entity.otp.OtpRepository;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.rateProduct.RateProductRepository;

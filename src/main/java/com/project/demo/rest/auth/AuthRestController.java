@@ -1,8 +1,9 @@
 package com.project.demo.rest.auth;
 
-import com.project.demo.logic.entity.Otp.Otp;
-import com.project.demo.logic.entity.Otp.OtpRepository;
-import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
+import com.project.demo.logic.entity.otp.Otp;
+import com.project.demo.logic.entity.otp.OtpRepository;
+import com.project.demo.logic.entity.otp.OtpService;
+import com.project.demo.logic.entity.otp.ValidateOtpRequest;
 import com.project.demo.logic.entity.auth.AuthenticationService;
 import com.project.demo.logic.entity.auth.JwtService;
 import com.project.demo.logic.entity.email.EmailDetails;
@@ -21,7 +22,6 @@ import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.logic.entity.userBuyer.UserBuyer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -49,8 +48,11 @@ public class AuthRestController {
     private final  OtpRepository otpRepository;
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
+    private final OtpService opOtpService;
 
-    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService) {
+    private final Random random = new Random();
+
+    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService, OtpService opOtpService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
@@ -59,6 +61,7 @@ public class AuthRestController {
         this.otpRepository = otpRepository;
         this.authenticationService = authenticationService;
         this.jwtService = jwtService;
+        this.opOtpService = opOtpService;
     }
 
 
@@ -150,9 +153,7 @@ public class AuthRestController {
     @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
         String email = request.getEmail();
-        String otpCode = request.getOtpCode();
-        String newPassword = request.getNewPassword();
-        String otp = String.valueOf(new Random().nextInt(999999));
+        String otp = String.valueOf(random.nextInt(999999));
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10);
 
         Otp otpEntity = new Otp();
@@ -162,7 +163,7 @@ public class AuthRestController {
 
         otpRepository.save(otpEntity);
 
-        sendPasswordResetOtpEmail(otp);
+        opOtpService.sendPasswordResetByEmail(otp);
 
         return "OTP generado exitosamente y enviado a " + email;
     }
@@ -174,7 +175,7 @@ public class AuthRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
-        boolean result = validateOtp(email, otpCode);
+        boolean result = opOtpService.validateOtp(email, otpCode);
 
         if (result) {
                 User user = userRepository.findByEmail(email)
@@ -195,7 +196,7 @@ public class AuthRestController {
         String email = request.getEmail();
         String otpCode = request.getOtpCode();
 
-        boolean result = validateOtp(email, otpCode);
+        boolean result = opOtpService.validateOtp(email, otpCode);
 
         if (result) {
             User user = userRepository.findByEmail(email)
@@ -206,63 +207,6 @@ public class AuthRestController {
         } else {
             return false;
         }
-    }
-
-    public boolean validateOtp(String email, String otpCode) {
-        Optional<Otp> otpOptional = otpRepository.findByOtpCodeAndEmail(otpCode, email);
-
-        if (otpOptional.isPresent()) {
-            Otp otp = otpOptional.get();
-            LocalDateTime now = LocalDateTime.now();
-
-            if (otp.getExpiryTime().isAfter(now)) {
-                otpRepository.delete(otp);
-                return true;
-            } else {
-                otpRepository.delete(otp);
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private void sendPasswordResetOtpEmail(String otp) {
-        Property propertyEmail = propertyRepository.findByName("Correo Sendgrid")
-                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
-        String email = propertyEmail.getParameter();
-
-        Property propertySubject = propertyRepository.findByName("Asunto Recuperacion")
-                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
-        String subject = propertySubject.getParameter();
-
-        String emailBody = "Tu código de verificación para recuperación de contraseña es: " + otp + "\n Este código expira en 10 minutos.";
-        EmailDetails emailDetails = createEmailDetails(emailBody);
-        try {
-            emailService.sendEmail(emailDetails);
-        } catch (IOException e) {
-            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
-        }
-    }
-
-    @Scheduled(fixedRate = 60000)
-    public void cleanExpiredOtps() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Otp> expiredOtps = otpRepository.findExpiredOtps(now);
-        otpRepository.deleteAll(expiredOtps);
-        System.out.println("Se han eliminado " + expiredOtps.size() + " OTPs expirados.");
-    }
-
-    private EmailDetails createEmailDetails(String emailBody) {
-        Property property = propertyRepository.findByName("Correo Sendgrid")
-                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
-        String email = property.getParameter();
-        EmailInfo fromAddress = new EmailInfo("JBart", email);
-        EmailInfo toAddress = new EmailInfo("Usuario", email);
-        Property propertySubject = propertyRepository.findByName("Asunto Recuperacion")
-                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
-        String subject = propertySubject.getParameter();
-
-        return new EmailDetails(fromAddress, toAddress, subject, emailBody);
     }
 
 }

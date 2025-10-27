@@ -1,8 +1,8 @@
 package com.project.demo.rest.user;
 
-import com.project.demo.logic.entity.Otp.Otp;
-import com.project.demo.logic.entity.Otp.OtpRepository;
-import com.project.demo.logic.entity.Otp.ValidateOtpRequest;
+import com.project.demo.logic.entity.otp.Otp;
+import com.project.demo.logic.entity.otp.OtpRepository;
+import com.project.demo.logic.entity.otp.ValidateOtpRequest;
 import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailInfo;
 import com.project.demo.logic.entity.email.EmailService;

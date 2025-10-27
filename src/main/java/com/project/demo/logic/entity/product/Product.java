@@ -54,6 +54,9 @@ public class Product {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    public Product() {
+    }
+
     public Long getId() {
         return Id;
     }
@@ -108,9 +111,6 @@ public class Product {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Product() {
     }
 
     public Category getCategory() {
