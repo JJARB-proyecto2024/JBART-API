@@ -1,6 +1,5 @@
 package com.project.demo.rest.auth;
 
-import com.project.demo.logic.entity.otp.Otp;
 import com.project.demo.logic.entity.otp.OtpRepository;
 import com.project.demo.logic.entity.otp.OtpService;
 import com.project.demo.logic.entity.otp.ValidateOtpRequest;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -48,11 +46,11 @@ public class AuthRestController {
     private final  OtpRepository otpRepository;
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
-    private final OtpService opOtpService;
+    private final OtpService otpService;
 
     private final Random random = new Random();
 
-    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService, OtpService opOtpService) {
+    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService, OtpService otpService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
@@ -61,7 +59,7 @@ public class AuthRestController {
         this.otpRepository = otpRepository;
         this.authenticationService = authenticationService;
         this.jwtService = jwtService;
-        this.opOtpService = opOtpService;
+        this.otpService = otpService;
     }
 
 
@@ -152,18 +150,9 @@ public class AuthRestController {
     @PostMapping("/generatePasswordResetOtp")
     @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
+
         String email = request.getEmail();
-        String otp = String.valueOf(random.nextInt(999999));
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(10);
-
-        Otp otpEntity = new Otp();
-        otpEntity.setOtpCode(otp);
-        otpEntity.setEmail(email);
-        otpEntity.setExpiryTime(expiryTime);
-
-        otpRepository.save(otpEntity);
-
-        opOtpService.sendPasswordResetByEmail(otp);
+        otpService.generateOtp(email);
 
         return "OTP generado exitosamente y enviado a " + email;
     }
@@ -175,7 +164,7 @@ public class AuthRestController {
         String otpCode = request.getOtpCode();
         String newPassword = request.getNewPassword();
 
-        boolean result = opOtpService.validateOtp(email, otpCode);
+        boolean result = otpService.validateOtp(email, otpCode);
 
         if (result) {
                 User user = userRepository.findByEmail(email)
@@ -196,7 +185,7 @@ public class AuthRestController {
         String email = request.getEmail();
         String otpCode = request.getOtpCode();
 
-        boolean result = opOtpService.validateOtp(email, otpCode);
+        boolean result = otpService.validateOtp(email, otpCode);
 
         if (result) {
             User user = userRepository.findByEmail(email)
