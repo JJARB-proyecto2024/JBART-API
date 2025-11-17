@@ -2,10 +2,7 @@ package com.project.demo.rest.Otp;
 
 import com.project.demo.logic.entity.otp.OtpService;
 import jakarta.annotation.PostConstruct;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/otp")
@@ -17,9 +14,9 @@ public class OtpController {
         this.otpService = otpService;
     }
 
-    @PostMapping("/generate")
-    public String generateOtp() {
-        return otpService.generateOtp();
+    @PostMapping("/generate/{email}")
+    public String generateOtp(@PathVariable String email) {
+        return otpService.generateOtp(email);
     }
 
     @PostMapping("/validate")
