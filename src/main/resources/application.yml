@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3333/labdb
     username: andrey
-    password: password123
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
@@ -20,7 +20,7 @@ security:
     expiration-time: 3600000000000
 
 # SendGrid
-key: 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
+key: ${SENDGRID_KEY:sendgrid}
 
 # Paypal
 paypal:
