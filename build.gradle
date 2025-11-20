@@ -49,7 +49,7 @@ dependencies {
 sonar {
     properties {
         property "sonar.projectKey", "JJARB-proyecto2024_JBART-API"
-        property "sonar.organization", "JJARB"
+        property "sonar.organization", "jjarb-proyecto2024"
 //        property "sonar.sources", "scr"
     }
 }
