@@ -50,7 +50,7 @@ sonar {
     properties {
         property "sonar.projectKey", "JJARB-proyecto2024_JBART-API"
         property "sonar.organization", "JJARB"
-        property "sonar.sources", "scr"
+//        property "sonar.sources", "scr"
     }
 }
 
