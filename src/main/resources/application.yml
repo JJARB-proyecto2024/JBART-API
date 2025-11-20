@@ -16,7 +16,7 @@ spring:
 
 security:
   jwt:
-    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+    secret-key: ${SECRET_KEY}
     expiration-time: 3600000000000
 
 # SendGrid
@@ -25,6 +25,6 @@ key: ${SENDGRID_KEY:sendgrid}
 # Paypal
 paypal:
   client:
-    id: Ad7pr-QycJFpHCa6IIbCxfr58VVflaGSUgXEhc8WgggP2r3ednQS2C0yu_WnIuSBcXvKC8J3zFq7iRKS
-    secret: EFy4id_DXLLvC7L04YCkp8IQFza10Cu8xbro0zIQ6uYbqB8rJFKF4TI12XrEDqriEFbdaihxj6_73q9k
+    id: ${ID_PAYPAL}
+    secret: ${SECRET_KEY_PAYPAL}
   mode: sandbox
