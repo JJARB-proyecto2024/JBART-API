@@ -7,36 +7,44 @@ on:
 
 jobs:
   build-and-test:
+    name: 🚀 Build, Test & Sonar Analysis
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      # 1. Descargar el código
+      - name: ⬇️ Checkout del Código Fuente
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Necesario para el análisis profundo de Sonar
 
-      - name: Configurar JDK 21
+      # 2. Preparar el entorno
+      - name: ☕ Configurar Entorno Java 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Dar permisos a Gradle Wrapper
+      # 3. Permisos
+      - name: 🔧 Dar Permisos de Ejecución a Gradle
         run: chmod +x ./gradlew
 
-      - name: Ejecutar build
+      # 4. Compilación
+      - name: 🏗️ Compilar Proyecto (Build)
         run: ./gradlew build --no-daemon
 
-      - name: Ejecutar tests
+      # 5. Pruebas (Nota: 'build' ya suele correr tests, pero mantengo tu estructura)
+      - name: 🧪 Ejecutar Pruebas Unitarias
         run: ./gradlew test --no-daemon
 
-      - name: SonarQube Analysis
+      # 6. Análisis Estático
+      - name: 🔍 Analizar Calidad de Código (SonarQube)
         env:
-          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
-        run: ./gradlew sonar --info
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: ./gradlew sonar --info --no-daemon
 
-      - name: Notificar resultado
+      # 7. Finalización
+      - name: ✅ Notificar Éxito del Pipeline
         if: success()
-        run: echo "✅ Build y tests ejecutados exitosamente"
+        run: echo "✅ Build, pruebas y análisis completados exitosamente."
