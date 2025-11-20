@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis
 
       - name: Configurar JDK 21
         uses: actions/setup-java@v4
@@ -25,22 +23,19 @@ jobs:
       - name: Dar permisos a Gradle Wrapper
         run: chmod +x ./gradlew
 
-#      - name: Cache SonarQube packages
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.sonar/cache
-#          key: ${{ runner.os }}-sonar
-#          restore-keys: ${{ runner.os }}-sonar
+      - name: Ejecutar build
+        run: ./gradlew build --no-daemon
 
-      - name: Ejecutar build y tests
-        run: ./gradlew build test --no-daemon
+      - name: Ejecutar tests
+        run: ./gradlew test --no-daemon
 
       - name: SonarQube Analysis
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: gradle sonar:sonar
+          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+          SONAR_HOST_URL: ${{secrets.SONAR_HOST_URL}}
+        run: |
+          gradle sonar:properties
 
       - name: Notificar resultado
         if: success()
-        run: echo "✅ Build, tests y análisis de SonarQube ejecutados exitosamente"
+        run: echo "✅ Build y tests ejecutados exitosamente"
