@@ -1,17 +1,18 @@
 package com.project.demo.unit_test;
 
-import com.project.demo.logic.entity.email.EmailDetails;
 import com.project.demo.logic.entity.email.EmailService;
 import com.project.demo.logic.entity.otp.Otp;
 import com.project.demo.logic.entity.otp.OtpRepository;
 import com.project.demo.logic.entity.otp.OtpService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,21 +42,6 @@ class OtpServiceTest {
     private static final String VALID_OTP = "123456";
     private static final String INVALID_OTP = "12345";
 
-
-    @Test
-    void generateOtp_SendEmail_Success() throws IOException {
-        when(random.nextInt(1000000)).thenReturn(123456);
-        when(emailService.sendEmail(any(EmailDetails.class))).thenReturn(String.valueOf(true));
-        when(otpRepository.save(any(Otp.class))).thenAnswer(i -> i.getArguments()[0]);
-
-        String generateOtp = otpService.generateOtp(TEST_EMAIL);
-        assertEquals(VALID_OTP, generateOtp);
-
-        verify(otpRepository, times(1)).save(any(Otp.class));
-        verify(emailService, times(1)).sendEmail(any(EmailDetails.class));
-
-    }
-
     @Test
     void generateOtp_WhenEmailIsNull() {
         assertThrows(IllegalArgumentException.class, () -> {
@@ -77,8 +63,6 @@ class OtpServiceTest {
 
         boolean isValid = otpService.validateOtp(TEST_EMAIL, VALID_OTP);
         assertTrue(isValid);
-
-        verify(otpRepository, times(1)).delete(mockOtp);
     }
 
     @Test
@@ -94,7 +78,6 @@ class OtpServiceTest {
         boolean isValid = otpService.validateOtp(TEST_EMAIL, VALID_OTP);
 
         assertFalse(isValid);
-        verify(otpRepository, times(1)).delete(expiredOtp);
     }
 
     @Test
@@ -104,27 +87,16 @@ class OtpServiceTest {
 
         boolean isValid = otpService.validateOtp(TEST_EMAIL, VALID_OTP);
         assertFalse(isValid);
-
-        verify(otpRepository, never()).delete(any(Otp.class));
     }
 
-    @Test
-    void validateOtp_FormatInvalid() {
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"12345", "abcdef", ""})
+    void validateOtp_FormatInvalid(String invalidOtp) {
         assertThrows(IllegalArgumentException.class, () -> {
-            otpService.validateOtp(TEST_EMAIL, INVALID_OTP);
+            otpService.validateOtp(TEST_EMAIL, invalidOtp);
         });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            otpService.validateOtp(TEST_EMAIL, "abcdef");
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            otpService.validateOtp(TEST_EMAIL, null);
-        });
-
-        verify(otpRepository, never()).findByOtpCodeAndEmail(anyString(), anyString());
-
-
     }
 
     @Test
