@@ -40,7 +40,6 @@ class OtpServiceTest {
 
     private static final String TEST_EMAIL = "andreytest@gmail.com";
     private static final String VALID_OTP = "123456";
-    private static final String INVALID_OTP = "12345";
 
     @Test
     void generateOtp_WhenEmailIsNull() {
