@@ -1,17 +1,12 @@
 package com.project.demo.rest.auth;
 
-import com.project.demo.logic.entity.otp.OtpRepository;
-import com.project.demo.logic.entity.otp.OtpService;
-import com.project.demo.logic.entity.otp.ValidateOtpRequest;
 import com.project.demo.logic.entity.auth.AuthenticationService;
 import com.project.demo.logic.entity.auth.JwtService;
-import com.project.demo.logic.entity.email.EmailDetails;
-import com.project.demo.logic.entity.email.EmailInfo;
-import com.project.demo.logic.entity.email.EmailService;
+import com.project.demo.logic.entity.email.EmailSignUpBrand;
 import com.project.demo.logic.entity.enums.RoleEnum;
 import com.project.demo.logic.entity.enums.StatusEnum;
-import com.project.demo.logic.entity.property.Property;
-import com.project.demo.logic.entity.property.PropertyRepository;
+import com.project.demo.logic.entity.otp.OtpService;
+import com.project.demo.logic.entity.otp.ValidateOtpRequest;
 import com.project.demo.logic.entity.rol.Role;
 import com.project.demo.logic.entity.rol.RoleRepository;
 import com.project.demo.logic.entity.user.LoginResponse;
@@ -29,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.Optional;
-import java.util.Random;
 
 @RequestMapping("/auth")
 @RestController
@@ -41,23 +34,17 @@ public class AuthRestController {
     private final  UserRepository userRepository;
     private final  PasswordEncoder passwordEncoder;
     private final  RoleRepository roleRepository;
-    private final  PropertyRepository propertyRepository;
-    private final  EmailService emailService;
-    private final  OtpRepository otpRepository;
     private final AuthenticationService authenticationService;
+    private final EmailSignUpBrand emailSignUpBrand;
     private final JwtService jwtService;
     private final OtpService otpService;
 
-    private final Random random = new Random();
-
-    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, PropertyRepository propertyRepository, EmailService emailService, OtpRepository otpRepository, AuthenticationService authenticationService, JwtService jwtService, OtpService otpService) {
+    public AuthRestController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, AuthenticationService authenticationService, EmailSignUpBrand emailSignUpBrand, JwtService jwtService, OtpService otpService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.propertyRepository = propertyRepository;
-        this.emailService = emailService;
-        this.otpRepository = otpRepository;
         this.authenticationService = authenticationService;
+        this.emailSignUpBrand = emailSignUpBrand;
         this.jwtService = jwtService;
         this.otpService = otpService;
     }
@@ -100,36 +87,12 @@ public class AuthRestController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
         userBrand.setRole(role);
         userBrand.setStatus(StatusEnum.INACTIVE);
-
-        sendStatusUpdateEmail(userBrand.getBrandName(), buildEmailBody(userBrand.getBrandName()));
+        emailSignUpBrand.buildEmailSigUpBrand(userBrand);
 
         return ResponseEntity.ok(userRepository.save(userBrand));
     }
 
-    private void sendStatusUpdateEmail(String name, String emailBody) {
-        EmailDetails emailDetails = createEmailDetails(name, emailBody);
-        try {
-            emailService.sendEmail(emailDetails);
-            System.out.println("El correo se envio con exito.");
-        } catch (IOException e) {
-            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
-        }
-    }
 
-    private EmailDetails createEmailDetails(String name, String emailBody) {
-        // Recuperar la propiedad "Correo Sendgrid" usando Optional
-        Property property = propertyRepository.findByName("Correo Sendgrid")
-                .orElseThrow(() -> new RuntimeException("Property with name 'Correo Sendgrid' not found"));
-
-        // Obtener el parámetro (email) de la propiedad
-        String email = property.getParameter();
-
-        return new EmailDetails(new EmailInfo("JBart", email), new EmailInfo(name, email), "Actualización de Estado", emailBody);
-    }
-
-    private String buildEmailBody(String name) {
-        return String.format("Hola %s,\n\nGracias por registrarte en nuestra plataforma. Tu solicitud ha sido recibida y será procesada en las próximas horas por un administrador para validar la veracidad de los datos registrados en el formulario de registro.\n\nSaludos,\nEquipo JBart", name);
-    }
 
     @PostMapping("/signup/buyer")
     public ResponseEntity<?> registerUserBuyer(@RequestBody UserBuyer userBuyer) {
@@ -150,11 +113,17 @@ public class AuthRestController {
     @PostMapping("/generatePasswordResetOtp")
     @PreAuthorize("permitAll")
     public String generatePasswordResetOtp(@RequestBody ValidateOtpRequest request) {
-
-        String email = request.getEmail();
-        otpService.generateOtp(email);
-
-        return "OTP generado exitosamente y enviado a " + email;
+        try{
+            Optional<User> request1 = userRepository.findByEmail(request.getEmail());
+            if (request1.isPresent()) {
+                String email = request.getEmail();
+                otpService.generateOtp(email);
+                return "OTP generado exitosamente y enviado a " + email;
+            }
+        }catch (Exception e){
+            return e.getMessage();
+        }
+        return HttpStatus.NOT_FOUND.toString();
     }
 
     @PostMapping("/resetPassword")
@@ -167,14 +136,14 @@ public class AuthRestController {
         boolean result = otpService.validateOtp(email, otpCode);
 
         if (result) {
-                User user = userRepository.findByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
-                user.setPassword(passwordEncoder.encode(newPassword));
-                userRepository.save(user);
-                return true;
-            } else {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado para el email: " + email));
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return true;
+        } else {
 
-                return false;
+            return false;
 
         }
     }

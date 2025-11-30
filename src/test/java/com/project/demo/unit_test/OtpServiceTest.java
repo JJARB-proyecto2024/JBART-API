@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,16 +30,12 @@ class OtpServiceTest {
     @Mock
     private EmailService emailService;
 
-    @Mock
-    private Random random;
-
     @InjectMocks
     private OtpService otpService;
 
 
     private static final String TEST_EMAIL = "andreytest@gmail.com";
     private static final String VALID_OTP = "123456";
-    private static final String INVALID_OTP = "12345";
 
     @Test
     void generateOtp_WhenEmailIsNull() {

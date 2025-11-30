@@ -6,10 +6,13 @@ import com.project.demo.logic.entity.product.Product;
 import com.project.demo.logic.entity.product.ProductRepository;
 import com.project.demo.logic.entity.userBrand.UserBrand;
 import com.project.demo.rest.userBrand.UserBrandRestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -41,8 +44,17 @@ public class ProductController {
 
     @GetMapping("/brand/{id}")
     @PreAuthorize("hasAnyRole('USER_BRAND', 'SUPER_ADMIN', 'USER')")
-    public List<Product> getByBrand(@PathVariable Long id) {
-        return productRepository.findProductsByUserBrandId(id);
+    public ResponseEntity<?> getByBrand(@PathVariable Long id) {
+        try{
+            Optional<Product> product = productRepository.findById(id);
+            if (product.isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(product);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand not found");
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @GetMapping("/category/{id}")

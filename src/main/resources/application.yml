@@ -2,7 +2,7 @@ spring:
   application:
     name: demo
   datasource:
-    url: jdbc:mariadb://localhost:3333/labdb
+    url: jdbc:mariadb://localhost:3333/classdb
     username: andrey
     password: ${DB_PASSWORD:password}
     driver-class-name: org.mariadb.jdbc.Driver

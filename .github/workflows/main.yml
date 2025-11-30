@@ -15,7 +15,7 @@ jobs:
       - name: ⬇️ Checkout del Código Fuente
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necesario para el análisis profundo de Sonar
+          fetch-depth: 0
 
       # 2. Preparar el entorno
       - name: ☕ Configurar Entorno Java 21
@@ -33,7 +33,7 @@ jobs:
       - name: 🏗️ Compilar Proyecto (Build)
         run: ./gradlew build --no-daemon
 
-      # 5. Pruebas (Nota: 'build' ya suele correr tests, pero mantengo tu estructura)
+      # 5. Pruebas
       - name: 🧪 Ejecutar Pruebas Unitarias
         run: ./gradlew test --no-daemon
 

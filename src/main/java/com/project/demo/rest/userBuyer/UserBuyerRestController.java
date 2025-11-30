@@ -60,8 +60,17 @@ public class UserBuyerRestController {
     }
 
     @GetMapping("/filterByName/{name}")
-    public List<UserBuyer> getUserById(@PathVariable String name) {
-        return UserBuyerRepository.findUsersWithCharacterInName(name);
+    public ResponseEntity<?> getUserById(@PathVariable String name) {
+        try{
+            Optional<List<UserBuyer>> user = Optional.ofNullable(UserBuyerRepository.findUsersWithCharacterInName(name));
+            if (user.isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(user.get());
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
     }
 
     @PutMapping("/{id}")
