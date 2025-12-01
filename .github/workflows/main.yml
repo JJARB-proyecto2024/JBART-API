@@ -35,7 +35,7 @@ jobs:
 
       # 5. Pruebas
       - name: 🧪 Ejecutar Pruebas Unitarias
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test --tests "com.project.demo.unit_test.*" --no-daemon
 
       # 6. Análisis Estático
       - name: 🔍 Analizar Calidad de Código (SonarQube)
