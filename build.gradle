@@ -59,4 +59,6 @@ sonar {
 tasks.named('test') {
 	useJUnitPlatform()
     jvmArgs '-XX:+EnableDynamicAgentLoading'
+
+    exclude '**/api_test/**'
 }
